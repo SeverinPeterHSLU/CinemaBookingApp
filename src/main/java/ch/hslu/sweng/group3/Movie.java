@@ -1,5 +1,6 @@
 package ch.hslu.sweng.group3;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
@@ -7,7 +8,8 @@ import java.util.ArrayList;
 
 public class Movie {
 
-    private int movieID, movieDuration;
+    private final int movieID;
+    private int movieDuration;
     private String movieTitle;
     private boolean isActive;
 
@@ -19,32 +21,37 @@ public class Movie {
     }
 
     public static void addMovie(String movieTitle, int movieDuration, boolean isActive) {
-        try {
-            Statement stmnt = App.db.createStatement();
-            String sqlInsert = "INSERT INTO Movie (Title, Duration, isActive)" +
-                    "Values ('" + movieTitle + "', '" + movieDuration + "', " + isActive + ");";
-            stmnt.execute(sqlInsert);
+        String sql = "INSERT INTO Movie(Title, Duration, IsActive) VALUES(?,?,?)";
+        try (PreparedStatement pstmnt = App.db.prepareStatement(sql)){
+            pstmnt.setString(1, movieTitle);
+            pstmnt.setInt(2, movieDuration);
+            pstmnt.setBoolean(3, isActive);
+
+            pstmnt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public static void editMovie(int movieID, String movieTitle, int movieDuration, boolean isActive) {
-        try {
-            Statement stmnt = App.db.createStatement();
-            String sqlUpdate = "INSERT INTO Movie (Title, Duration, isActive)" +
-                    "Values ('" + movieTitle + "', '" + movieDuration + "', '" + isActive + "');";
-            stmnt.execute(sqlUpdate);
+        String sql = "UPDATE Movie SET Title = ? , Duration = ? , IsActive = ? WHERE MovieID = ?";
+        try (PreparedStatement pstmnt = App.db.prepareStatement(sql)){
+            pstmnt.setString(1, movieTitle);
+            pstmnt.setInt(2, movieDuration);
+            pstmnt.setBoolean(3, isActive);
+
+            pstmnt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public static void removeMovie(int movieID) {
-        try {
-            Statement stmnt = App.db.createStatement();
-            String sqlDelete = "DELETE FROM Movie WHERE MovieID ='" + movieID + "';";
-            stmnt.execute(sqlDelete);
+        String sql = "DELETE FROM Movie WHERE MovieID = ?";
+        try (PreparedStatement pstmnt = App.db.prepareStatement(sql)){
+            pstmnt.setInt(1, movieID);
+
+            pstmnt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -75,7 +82,18 @@ public class Movie {
 
     public int getMovieDuration() { return movieDuration; }
 
+    public void setMovieDuration(int movieDuration) { this.movieDuration = movieDuration; }
+
     public String getMovieTitle() { return movieTitle; }
 
+    public void setMovieTitle(String movieTitle) { this.movieTitle = movieTitle; }
+
     public boolean isActive() { return isActive; }
+
+    public void setActive(boolean active) { isActive = active; }
+
+
+
+
+
 }
