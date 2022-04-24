@@ -50,10 +50,6 @@ public class Movie {
         }
     }
 
-    public Movie getMovie() {
-        return null;
-    }
-
     public static ArrayList<Movie> getMovies() {
         ArrayList<Movie> returnList = new ArrayList<>();
         String sqlSelect = "SELECT * FROM Movie;";
@@ -74,4 +70,12 @@ public class Movie {
     public String toString() {
         return this.movieID + ", " + this.movieTitle + ", " + this.movieDuration  + ", " + this.isActive;
     }
+
+    public int getMovieID() { return movieID; }
+
+    public int getMovieDuration() { return movieDuration; }
+
+    public String getMovieTitle() { return movieTitle; }
+
+    public boolean isActive() { return isActive; }
 }

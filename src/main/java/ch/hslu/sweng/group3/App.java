@@ -27,9 +27,12 @@ public class App {
 
         Movie.addMovie("Die Hard", 122, true);
         for (Movie movie : Movie.getMovies()) {
-            System.out.println(movie);
+            System.out.println(movie.getMovieID());
+            System.out.println(movie.getMovieTitle());
+            System.out.println(movie.getMovieDuration());
+            System.out.println(movie.isActive());
+            Movie.removeMovie(movie.getMovieID());
         }
-        Movie.removeMovie(1);
 
         try {
             if (db != null) {
