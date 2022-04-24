@@ -1,13 +1,43 @@
 package ch.hslu.sweng.group3;
 
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
 /**
  * Hello world!
  *
  */
-public class App 
-{
+public class App {
+
+    protected static Connection db;
+    private static final String url = "C:\\Users\\sevip\\CinemaDB.db";
+    private static final String preAmble ="jdbc:sqlite:";
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+        try {
+            db = DriverManager.getConnection(preAmble.concat(url));
+            System.out.println("got connected");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Movie.addMovie("Die Hard", 122, true);
+        for (Movie movie : Movie.getMovies()) {
+            System.out.println(movie);
+        }
+        Movie.removeMovie(1);
+
+        try {
+            if (db != null) {
+                db.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
 }
