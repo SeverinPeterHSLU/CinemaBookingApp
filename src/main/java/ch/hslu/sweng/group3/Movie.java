@@ -39,6 +39,7 @@ public class Movie {
             pstmnt.setString(1, movieTitle);
             pstmnt.setInt(2, movieDuration);
             pstmnt.setBoolean(3, isActive);
+            pstmnt.setInt(4, movieID);
 
             pstmnt.executeUpdate();
         } catch (SQLException e) {
@@ -91,9 +92,4 @@ public class Movie {
     public boolean isActive() { return isActive; }
 
     public void setActive(boolean active) { isActive = active; }
-
-
-
-
-
 }

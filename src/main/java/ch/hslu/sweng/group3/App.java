@@ -7,17 +7,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-/**
- * Hello world!
- *
- */
 public class App {
 
     protected static Connection db;
     private static final String url = "C:\\Users\\sevip\\CinemaDB.db";
     private static final String preAmble ="jdbc:sqlite:";
-    public static void main( String[] args )
-    {
+    public static void main( String[] args ) {
         try {
             db = DriverManager.getConnection(preAmble.concat(url));
             System.out.println("got connected");
