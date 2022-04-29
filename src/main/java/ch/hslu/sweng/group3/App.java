@@ -26,7 +26,7 @@ public class App {
             System.out.println(movie.getMovieTitle());
             System.out.println(movie.getMovieDuration());
             System.out.println(movie.isActive());
-            Movie.removeMovie(movie.getMovieID());
+            Movie.removeMovie(movie);
         }
 
         try {

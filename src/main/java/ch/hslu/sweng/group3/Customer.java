@@ -27,6 +27,19 @@ public class Customer {
         }
     }
 
+    public static Customer getCustomer(int customerID) {
+        String sql = "SELECT * FROM Customer WHERE CustomerID = ?";
+        try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
+            pstmnt.setInt(1, customerID);
+
+            ResultSet res = pstmnt.executeQuery();
+            return new Customer(res.getInt("CustomerID"), res.getString("Email"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static ArrayList<Customer> getCustomers() {
         ArrayList<Customer> returnList = new ArrayList<>();
         String sql = "SELECT * FROM Customer;";
