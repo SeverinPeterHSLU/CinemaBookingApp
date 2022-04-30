@@ -67,15 +67,19 @@ public class Movie {
         return false;
     }
 
-    public static void removeMovie(Movie movie) {
+    public static boolean removeMovie(Movie movie) {
         String sql = "DELETE FROM Movie WHERE MovieID = ?";
-        try (PreparedStatement pstmnt = App.db.prepareStatement(sql)){
-            pstmnt.setInt(1, movie.getMovieID());
+        if (!movie.hasShow()) {
+            try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
+                pstmnt.setInt(1, movie.getMovieID());
 
-            pstmnt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+                pstmnt.executeUpdate();
+                return true;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+        return false;
     }
 
     public static Movie getMovie(int movieID) {
