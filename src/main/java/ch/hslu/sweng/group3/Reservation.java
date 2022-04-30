@@ -116,4 +116,6 @@ public class Reservation {
     public void setCustomer(Customer customer) { this.customer = customer; }
 
     public void setNumberOfSeats(int numberOfSeats) { this.numberOfSeats = numberOfSeats; }
+
+    public void setCollected(boolean collected) { isCollected = collected; }
 }

@@ -16,7 +16,7 @@ public class Customer {
         this.email = email;
     }
 
-    private static void addCustomer(String email) {
+    public static void addCustomer(String email) {
         String sql = "INSERT INTO Customer(Email) VALUES(?)";
         try (PreparedStatement pstmnt = App.db.prepareStatement(sql)){
             pstmnt.setString(1, email);
@@ -31,6 +31,19 @@ public class Customer {
         String sql = "SELECT * FROM Customer WHERE CustomerID = ?";
         try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
             pstmnt.setInt(1, customerID);
+
+            ResultSet res = pstmnt.executeQuery();
+            return new Customer(res.getInt("CustomerID"), res.getString("Email"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Customer getCustomerByEmail(String email) {
+        String sql = "SELECT * FROM Customer WHERE Email = ?";
+        try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
+            pstmnt.setString(1, email);
 
             ResultSet res = pstmnt.executeQuery();
             return new Customer(res.getInt("CustomerID"), res.getString("Email"));
