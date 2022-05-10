@@ -12,6 +12,7 @@ public class App {
     protected static Connection db;
     private static final String configLocation = "src/config.properties";
 
+
     public static void main(String[] args) {
         Properties properties = new Properties();
         try (FileInputStream propsInputStream = new FileInputStream(configLocation)) {

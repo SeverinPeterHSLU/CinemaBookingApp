@@ -13,6 +13,14 @@ public class Movie {
     private String movieTitle;
     private boolean isActive;
 
+    /**
+     * No call outside the Class allowed!
+     *
+     * @param    movieID         the ID of the movie object to be created
+     * @param    movieTitle      the Title of the movie object to be created
+     * @param    movieDuration   the duration of the movie object to be created
+     * @param    isActive        the Active status of the movie object to be created
+     * */
     public Movie(int movieID, String movieTitle, int movieDuration, boolean isActive) {
         this.movieID = movieID;
         this.movieDuration = movieDuration;
@@ -20,13 +28,17 @@ public class Movie {
         this.isActive = isActive;
     }
 
+    /**
+     *
+     * @return true if there is a show in the DB that shows the movie, false if not
+     */
     private boolean hasShow() {
         String sql = "SELECT COUNT(MovieID) FROM Show WHERE MovieID = ?";
         try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
             pstmnt.setInt(1, this.movieID);
 
             ResultSet res = pstmnt.executeQuery();
-            if (res.getInt("COUNT(MovieID)") == 0) {
+            if (res.getInt("COUNT(MovieID)") != 0) {
                 return true;
             }
         } catch (SQLException e) {
@@ -35,6 +47,12 @@ public class Movie {
         return false;
     }
 
+    /**
+     *
+     * @param    movieTitle      the Title of the movie to be written to the DB
+     * @param    movieDuration   the Duration of the movie to be written to the DB
+     * @param    isActive        the Active status of the movie to be written to the DB
+     */
     public static void addMovie(String movieTitle, int movieDuration, boolean isActive) {
         String sql = "INSERT INTO Movie(Title, Duration, IsActive) VALUES(?,?,?)";
         try (PreparedStatement pstmnt = App.db.prepareStatement(sql)){
@@ -48,7 +66,13 @@ public class Movie {
         }
     }
 
+    /**
+     *
+     * @param    movie   the Movie object that has been modified by the program and needs to be updated in the DB
+     * @return           true if the update was successful, false if not
+     */
     public static boolean editMovie(Movie movie) {
+        assert (movie != null);
         if (!movie.hasShow()) {
             String sql = "UPDATE Movie SET Title = ? , Duration = ? , IsActive = ? WHERE MovieID = ?";
             try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
@@ -67,7 +91,13 @@ public class Movie {
         return false;
     }
 
+    /**
+     *
+     * @param    movie   the Movie object to be deleted form the DB
+     * @return           true if deletion was successful, false if not
+     */
     public static boolean removeMovie(Movie movie) {
+        assert (movie != null);
         String sql = "DELETE FROM Movie WHERE MovieID = ?";
         if (!movie.hasShow()) {
             try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
@@ -82,6 +112,11 @@ public class Movie {
         return false;
     }
 
+    /**
+     *
+     * @param    movieID the ID of the movie to be loaded from the DB
+     * @return           the loaded Movie object from the DB, null if no such entry exist
+     */
     public static Movie getMovie(int movieID) {
         String sql = "SELECT * FROM Movie WHERE MovieID = ?";
         Movie retMovie = null;
@@ -89,15 +124,20 @@ public class Movie {
             pstmnt.setInt(1, movieID);
 
             ResultSet res = pstmnt.executeQuery();
-            retMovie = new Movie(res.getInt("MovieID"), res.getString("Title"),
-                    res.getInt("Duration"), res.getBoolean("IsActive"));
-
+            if (res.next()) {
+                retMovie = new Movie(res.getInt("MovieID"), res.getString("Title"),
+                        res.getInt("Duration"), res.getBoolean("IsActive"));
+            }
         } catch(SQLException e) {
             e.printStackTrace();
         }
         return retMovie;
     }
 
+    /**
+     *
+     * @return   an ArrayList with all the movie entries in the DB, empty if table is empty
+     */
     public static ArrayList<Movie> getMovies() {
         ArrayList<Movie> returnList = new ArrayList<>();
         String sqlSelect = "SELECT * FROM Movie;";

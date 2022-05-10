@@ -14,6 +14,15 @@ public class Reservation {
     private int numberOfSeats;
     private boolean isCollected;
 
+    /**
+     * No call outside the Class allowed!
+     *
+     * @param reservationID id of the reservation
+     * @param numberOfSeats number of booked seats
+     * @param isCollected the status of the reservation
+     * @param customer the customer object that made the reservation
+     * @param show the show object for which the reservation has been made
+     */
     public Reservation(int reservationID, int numberOfSeats, boolean isCollected, Customer customer, Show show) {
         this.reservationID = reservationID;
         this.show = show;
@@ -22,7 +31,14 @@ public class Reservation {
         this.isCollected = isCollected;
     }
 
+    /**
+     *
+     * @param numberOfSeats the number of seats to be booked, not 0
+     * @param customer the customer object, not null
+     * @param show the sow object, not null
+     */
     public static void addReservation(int numberOfSeats, Customer customer, Show show) {
+        assert (numberOfSeats != 0 && customer != null && show != null);
         String sql = "INSERT INTO Reservation(NumberOfSeats, IsCollected, CustomerID, ShowID) VALUES(?,?,?,?)";
         try (PreparedStatement pstmnt = App.db.prepareStatement(sql)){
             pstmnt.setInt(1, numberOfSeats);
@@ -36,7 +52,13 @@ public class Reservation {
         }
     }
 
+    /**
+     *
+     * @param reservation the reservation to be updated in the db, not null
+     * @return true if update successful, false if not
+     */
     public static boolean editReservation(Reservation reservation) {
+        assert (reservation != null);
         String sql = "UPDATE Reservation SET NumberOFSeats = ?, CustomerID = ?, ShowID = ? WHERE ReservationID = ?";
         try (PreparedStatement pstmnt = App.db.prepareStatement(sql)){
             pstmnt.setInt(1, reservation.getNumberOfSeats());
@@ -53,7 +75,13 @@ public class Reservation {
         return false;
     }
 
+    /**
+     *
+     * @param reservation the reservation to be deleted
+     * @return true if deletion was successful, false if not
+     */
     public static boolean removeReservation(Reservation reservation) {
+        assert (reservation != null);
         String sql = "DELETE FROM Reservation WHERE ReservationID = ?";
         try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
             pstmnt.setInt(1, reservation.getReservationID());
@@ -66,6 +94,11 @@ public class Reservation {
         return false;
     }
 
+    /**
+     *
+     * @param reservationID the id of the reservation to be loaded from the db
+     * @return the loaded reservation object loaded from the db, null if no such entry
+     */
     public static Reservation getReservation(int reservationID) {
         String sql = "SELECT * FROM Reservation WHERE ReservationID = ?";
         Reservation retReservation = null;
@@ -73,16 +106,22 @@ public class Reservation {
             pstmnt.setInt(1, reservationID);
 
             ResultSet res = pstmnt.executeQuery();
-            retReservation = new Reservation(res.getInt("ReservationID"),
-                    res.getInt("NumberOfSeats"), res.getBoolean("IsCollected"),
-                    Customer.getCustomer(res.getInt("CustomerID")),
-                    Show.getShow(res.getInt("ShowID")));
+            if (res.next()) {
+                retReservation = new Reservation(res.getInt("ReservationID"),
+                        res.getInt("NumberOfSeats"), res.getBoolean("IsCollected"),
+                        Customer.getCustomer(res.getInt("CustomerID")),
+                        Show.getShow(res.getInt("ShowID")));
+            }
         } catch(SQLException e) {
             e.printStackTrace();
         }
         return retReservation;
     }
 
+    /**
+     *
+     * @return an ArrayList of all reservations in the db, empty if no entries
+     */
     public static ArrayList<Reservation> getReservations() {
         ArrayList<Reservation> returnList = new ArrayList<>();
         String sqlSelect = "SELECT * FROM Reservation;";
