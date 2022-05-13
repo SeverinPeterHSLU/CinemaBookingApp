@@ -14,6 +14,14 @@ public class Show {
     private Room room;
     private Date start;
 
+    /**
+     * No call outside the Class allowed!
+     *
+     * @param showID the show id
+     * @param start the start date of the show
+     * @param movie the movie object the show is showing
+     * @param room the room object that the show takes place in
+     */
     public Show(int showID, Date start, Movie movie, Room room) {
         this.showID = showID;
         this.movie = movie;
@@ -21,7 +29,14 @@ public class Show {
         this.start = start;
     }
 
+    /**
+     *
+     * @param start the start date of the show, not null
+     * @param movie the movie object the show is showing, not null
+     * @param room the room object where the show is shown, not null
+     */
     public static void addShow(Date start, Movie movie, Room room) {
+        assert (start != null && movie != null && room != null);
         String sql = "INSERT INTO Show(Start, MovieID, RoomID) VALUES(?,?,?)";
         try (PreparedStatement pstmnt = App.db.prepareStatement(sql)){
             pstmnt.setDate(1, new java.sql.Date(start.getTime()));
@@ -34,11 +49,32 @@ public class Show {
         }
     }
 
+    /**
+     *
+     * @return true if there is a reservation for the show, fasle if not
+     */
     private boolean hasReservation() {
-        return true;
+        String sql = "SELECT COUNT(ShowID) FROM Reservation WHERE ShowID = ?";
+        try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
+            pstmnt.setInt(1, this.showID);
+
+            ResultSet res = pstmnt.executeQuery();
+            if (res.getInt("COUNT(MovieID)") != 0) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
+    /**
+     *
+     * @param show the show to be updated in the db, not null
+     * @return true if update successful, false if not
+     */
     public static boolean editShow(Show show) {
+        assert (show != null);
         if (!show.hasReservation()) {
             String sql = "UPDATE Show SET Start = ?, MovieID = ?, RoomID = ? WHERE ShowID = ?";
             try (PreparedStatement pstmnt = App.db.prepareStatement(sql)){
@@ -57,7 +93,13 @@ public class Show {
         return false;
     }
 
+    /**
+     *
+     * @param show the show object to be deleted in the db, not null
+     * @return true if deletion was successful, false if not
+     */
     public static boolean removeShow(Show show) {
+        assert (show != null);
         if (!show.hasReservation()) {
             String sql = "DELETE FROM Show WHERE ShowID = ?";
             try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
@@ -73,6 +115,11 @@ public class Show {
         }
     }
 
+    /**
+     *
+     * @param showID the id of the show objet to be loaded from the db
+     * @return the show objet loaded from the db, null if no such entry
+     */
     public static Show getShow(int showID) {
         String sql = "SELECT * FROM Show WHERE ShowID = ?";
         Show retShow = null;
@@ -80,14 +127,20 @@ public class Show {
             pstmnt.setInt(1, showID);
 
             ResultSet res = pstmnt.executeQuery();
-            retShow = new Show(res.getInt("ShowID"), res.getDate("Start"),
-                    Movie.getMovie(res.getInt("MovieID")), Room.getRoom(res.getInt("RoomID")));
+            if (res.next()) {
+                retShow = new Show(res.getInt("ShowID"), res.getDate("Start"),
+                        Movie.getMovie(res.getInt("MovieID")), Room.getRoom(res.getInt("RoomID")));
+            }
         } catch(SQLException e) {
             e.printStackTrace();
         }
         return retShow;
     }
 
+    /**
+     *
+     * @return an ArrayList of all show objects in the db, empty if no entries
+     */
     public static ArrayList<Show> getShows() {
         ArrayList<Show> returnList = new ArrayList<>();
         String sqlSelect = "SELECT * FROM Show;";

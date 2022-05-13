@@ -11,23 +11,42 @@ public class Room {
     private final int roomID;
     private int seatsOfRoom;
 
+    /**
+     *No call outside the Class allowed!
+     *
+     * @param roomID        ID of Room object to be created
+     * @param seatsOfRoom   number of seats in the Room
+     */
     public Room(int roomID, int seatsOfRoom) {
         this.roomID = roomID;
         this.seatsOfRoom = seatsOfRoom;
     }
 
-    public void editRoom(int roomID, int seatsOfRoom) {
+    /**
+     *
+     * @param room the Room object to be updated in the db
+     * @return true if update successful, false if not
+     */
+    public static boolean editRoom(Room room) {
+        assert (room != null);
         String sql = "UPDATE Room SET SeatsOfRoom = ? WHERE RoomID = ?";
         try (PreparedStatement pstmnt = App.db.prepareStatement(sql)){
-            pstmnt.setInt(1, seatsOfRoom);
-            pstmnt.setInt(2, roomID);
+            pstmnt.setInt(1, room.getSeatsOfRoom());
+            pstmnt.setInt(2, room.getRoomID());
 
             pstmnt.executeUpdate();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
+    /**
+     *
+     * @param roomID the id of the room to be loaded form the db
+     * @return the room object loaded from the db or null if no such entry
+     */
     public static Room getRoom(int roomID) {
         String sql = "SELECT * FROM Room WHERE RoomID = ?";
         Room retRoom = null;
@@ -35,14 +54,19 @@ public class Room {
             pstmnt.setInt(1, roomID);
 
             ResultSet res = pstmnt.executeQuery();
-            retRoom = new Room(res.getInt("RoomID"), res.getInt("SeatsOfRoom"));
-
+            if (res.next()) {
+                retRoom = new Room(res.getInt("RoomID"), res.getInt("SeatsOfRoom"));
+            }
         } catch(SQLException e) {
             e.printStackTrace();
         }
         return retRoom;
     }
 
+    /**
+     *
+     * @return an ArrayList of all room objects in the db, empty if no entries
+     */
     public static ArrayList<Room> getRooms() {
         ArrayList<Room> returnList = new ArrayList<>();
         String sql = "SELECT * FROM Room;";
