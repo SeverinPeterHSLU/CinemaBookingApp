@@ -10,7 +10,6 @@ import java.util.Properties;
 public class App {
 
     protected static Connection db;
-    private static final String configLocation = "src/config.properties";
 
     private static boolean hasNoTables() {
         String sql = "SELECT name FROM sqlite_schema\n" +
@@ -45,14 +44,8 @@ public class App {
     public static void main(String[] args) {
         MainFrame mainframe = new MainFrame();
 
-        Properties properties = new Properties();
-        try (FileInputStream propsInputStream = new FileInputStream(configLocation)) {
-            properties.load(propsInputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         try {
-            db = DriverManager.getConnection(properties.getProperty("DB_URL"));
+            db = DriverManager.getConnection("jdbc:sqlite:DataBase.db");
             System.out.println("got connected");
             if (hasNoTables()) {
                 System.out.println("DB has no Tables!");
