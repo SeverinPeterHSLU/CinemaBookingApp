@@ -121,7 +121,10 @@ public class Show {
      * @return the show objet loaded from the db, null if no such entry
      */
     public static Show getShow(int showID) {
-        String sql = "SELECT * FROM Show WHERE ShowID = ?";
+        String sql = "SELECT * FROM Show " +
+                "INNER JOIN Movie ON Show.MovieID=Movie.MovieID" +
+                "INNER JOIN Room ON Show.RoomID=Room.RoomID" +
+                "WHERE ShowID = ?";
         Show retShow = null;
         try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
             pstmnt.setInt(1, showID);
@@ -129,7 +132,9 @@ public class Show {
             ResultSet res = pstmnt.executeQuery();
             if (res.next()) {
                 retShow = new Show(res.getInt("ShowID"), res.getDate("Start"),
-                        Movie.getMovie(res.getInt("MovieID")), Room.getRoom(res.getInt("RoomID")));
+                            new Movie(res.getInt("MovieID"), res.getString("Title"),
+                                res.getInt("Duration"), res.getBoolean("IsActive")),
+                            new Room(res.getInt("RoomID"), res.getInt("SeatsOfRoom")));
             }
         } catch(SQLException e) {
             e.printStackTrace();
@@ -143,13 +148,17 @@ public class Show {
      */
     public static ArrayList<Show> getShows() {
         ArrayList<Show> returnList = new ArrayList<>();
-        String sqlSelect = "SELECT * FROM Show;";
+        String sqlSelect = "SELECT * FROM Show " +
+                "INNER JOIN Movie ON Show.MovieID=Movie.MovieID" +
+                "INNER JOIN Room ON Show.RoomID=Room.RoomID";
         try {
             Statement stmnt = App.db.createStatement();
             ResultSet res = stmnt.executeQuery(sqlSelect);
             while (res.next()) {
                 returnList.add(new Show(res.getInt("ShowID"), res.getDate("Start"),
-                        Movie.getMovie(res.getInt("MovieID")), Room.getRoom(res.getInt("RoomID"))));
+                        new Movie(res.getInt("MovieID"), res.getString("Title"),
+                                res.getInt("Duration"), res.getBoolean("IsActive")),
+                        new Room(res.getInt("RoomID"), res.getInt("SeatsOfRoom"))));
             }
         } catch (SQLException e) {
             e.printStackTrace();
