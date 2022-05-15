@@ -50,15 +50,6 @@ public class App {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
-        try {
-            if (db != null) {
-                db.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
 }
