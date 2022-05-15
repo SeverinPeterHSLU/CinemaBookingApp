@@ -38,7 +38,7 @@ public class Reservation {
      * @param show the sow object, not null
      */
     public static void addReservation(int numberOfSeats, Customer customer, Show show) {
-        assert (numberOfSeats != 0 && customer != null && show != null);
+        assert (numberOfSeats >= 0 && customer != null && show != null);
         String sql = "INSERT INTO Reservation(NumberOfSeats, IsCollected, CustomerID, ShowID) VALUES(?,?,?,?)";
         try (PreparedStatement pstmnt = App.db.prepareStatement(sql)){
             pstmnt.setInt(1, numberOfSeats);
@@ -170,7 +170,9 @@ public class Reservation {
 
     public void setCustomer(Customer customer) { this.customer = customer; }
 
-    public void setNumberOfSeats(int numberOfSeats) { this.numberOfSeats = numberOfSeats; }
+    public void setNumberOfSeats(int numberOfSeats) {
+        assert (numberOfSeats >= 0);
+        this.numberOfSeats = numberOfSeats; }
 
     public void setCollected(boolean collected) { isCollected = collected; }
 }

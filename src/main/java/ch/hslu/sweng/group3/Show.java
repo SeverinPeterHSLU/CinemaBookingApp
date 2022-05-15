@@ -68,6 +68,23 @@ public class Show {
         return false;
     }
 
+    public int seatsAvailable() {
+        ArrayList<Reservation> resrevations = new ArrayList<>();
+        int bookedSeats = 0;
+        String sql = "SELECT ReservationID FROM Reservation WHERE ShowID = ?";
+        try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
+            pstmnt.setInt(1, showID);
+
+            ResultSet res = pstmnt.executeQuery();
+            while (res.next()) {
+                bookedSeats += res.getInt("NumberOfSeats");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return room.getSeatsOfRoom() - bookedSeats;
+    }
+
     /**
      *
      * @param show the show to be updated in the db, not null
@@ -121,6 +138,7 @@ public class Show {
      * @return the show objet loaded from the db, null if no such entry
      */
     public static Show getShow(int showID) {
+        assert (showID >= 0);
         String sql = "SELECT * FROM Show " +
                 "INNER JOIN Movie ON Show.MovieID=Movie.MovieID" +
                 "INNER JOIN Room ON Show.RoomID=Room.RoomID" +
