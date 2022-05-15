@@ -29,6 +29,10 @@ public class AddReservationFormFrame extends JFrame {
         btnSaveReservation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Show s = Show.getShow(Integer.parseInt(txtInputShowID.getText()));
+                Customer c = Customer.getCustomerByEmail(txtInputEmail.getText());
+                int numberOfSeats = Integer.parseInt(txtInputNumberOfSeats.getText());
+                Reservation.addReservation(numberOfSeats, c, s);
 
                 dispose();
                 ReservationAdministrationFrame reservationAdm = new ReservationAdministrationFrame();

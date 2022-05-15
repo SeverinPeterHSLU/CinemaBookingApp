@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
 public class AddMovieFormFrame extends JFrame {
     private JLabel lblMovieTitle;
     private JTextField txtInputMovieTitle;
@@ -27,6 +28,9 @@ public class AddMovieFormFrame extends JFrame {
         btnSaveMovie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String movieTitle = txtInputMovieTitle.getText();
+                int duration = Integer.parseInt(txtInputDuration.getText());
+                Movie.addMovie(movieTitle, duration, true);
 
                 dispose();
                 MovieAdministrationFrame movieAdm = new MovieAdministrationFrame();
