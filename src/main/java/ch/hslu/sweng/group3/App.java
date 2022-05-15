@@ -14,6 +14,8 @@ public class App {
 
 
     public static void main(String[] args) {
+        MainFrame mainframe = new MainFrame();
+
         Properties properties = new Properties();
         try (FileInputStream propsInputStream = new FileInputStream(configLocation)) {
             properties.load(propsInputStream);

@@ -100,7 +100,12 @@ public class Reservation {
      * @return the loaded reservation object loaded from the db, null if no such entry
      */
     public static Reservation getReservation(int reservationID) {
-        String sql = "SELECT * FROM Reservation WHERE ReservationID = ?";
+        String sql = "SELECT * FROM Reservation " +
+                "INNER JOIN Show ON Reservation.ShowID = Show.ShowID " +
+                "INNER JOIN Customer ON Reservation.CustomerID = Customer.CustomerID " +
+                "INNER JOIN Movie ON Show.MovieID=Movie.MovieID" +
+                "INNER JOIN Room ON Show.RoomID=Room.RoomID" +
+                "WHERE ReservationID = ?";
         Reservation retReservation = null;
         try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
             pstmnt.setInt(1, reservationID);
@@ -109,8 +114,11 @@ public class Reservation {
             if (res.next()) {
                 retReservation = new Reservation(res.getInt("ReservationID"),
                         res.getInt("NumberOfSeats"), res.getBoolean("IsCollected"),
-                        Customer.getCustomer(res.getInt("CustomerID")),
-                        Show.getShow(res.getInt("ShowID")));
+                        new Customer(res.getInt("CustomerID"), res.getString("Email")),
+                        new Show(res.getInt("ShowID"), res.getDate("Start"),
+                                new Movie(res.getInt("MovieID"), res.getString("Title"),
+                                        res.getInt("Duration"), res.getBoolean("IsActive")),
+                                new Room(res.getInt("RoomID"), res.getInt("SeatsOfRoom"))));
             }
         } catch(SQLException e) {
             e.printStackTrace();
@@ -124,15 +132,23 @@ public class Reservation {
      */
     public static ArrayList<Reservation> getReservations() {
         ArrayList<Reservation> returnList = new ArrayList<>();
-        String sqlSelect = "SELECT * FROM Reservation;";
+        String sqlSelect = "SELECT * FROM Reservation" +
+                "INNER JOIN Show ON Reservation.ShowID = Show.ShowID " +
+                "INNER JOIN Customer ON Reservation.CustomerID = Customer.CustomerID " +
+                "INNER JOIN Movie ON Show.MovieID=Movie.MovieID" +
+                "INNER JOIN Room ON Show.RoomID=Room.RoomID" +
+                "WHERE ReservationID = ?";
         try {
             Statement stmnt = App.db.createStatement();
             ResultSet res = stmnt.executeQuery(sqlSelect);
             while (res.next()) {
                 returnList.add(new Reservation(res.getInt("ReservationID"),
                         res.getInt("NumberOfSeats"), res.getBoolean("IsCollected"),
-                        Customer.getCustomer(res.getInt("CustomerID")),
-                        Show.getShow(res.getInt("ShowID"))));
+                        new Customer(res.getInt("CustomerID"), res.getString("Email")),
+                        new Show(res.getInt("ShowID"), res.getDate("Start"),
+                                new Movie(res.getInt("MovieID"), res.getString("Title"),
+                                        res.getInt("Duration"), res.getBoolean("IsActive")),
+                                new Room(res.getInt("RoomID"), res.getInt("SeatsOfRoom")))));
             }
         } catch (SQLException e) {
             e.printStackTrace();
