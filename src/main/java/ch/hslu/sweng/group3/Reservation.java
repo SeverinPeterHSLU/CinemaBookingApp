@@ -37,19 +37,28 @@ public class Reservation {
      * @param customer the customer object, not null
      * @param show the sow object, not null
      */
-    public static void addReservation(int numberOfSeats, Customer customer, Show show) {
+    public static int addReservation(int numberOfSeats, Customer customer, Show show) {
+        int retInt = -1;
         assert (numberOfSeats >= 0 && customer != null && show != null);
         String sql = "INSERT INTO Reservation(NumberOfSeats, IsCollected, CustomerID, ShowID) VALUES(?,?,?,?)";
-        try (PreparedStatement pstmnt = App.db.prepareStatement(sql)){
+        try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
             pstmnt.setInt(1, numberOfSeats);
             pstmnt.setBoolean(2, false);
             pstmnt.setInt(3, customer.getCustomerID());
             pstmnt.setInt(4, show.getShowID());
 
             pstmnt.executeUpdate();
+
+            ResultSet res = pstmnt.getGeneratedKeys();
+            if (res.next()) {
+                retInt = res.getInt(1);
+            } else {
+                //Error handling...
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return retInt;
     }
 
     /**
