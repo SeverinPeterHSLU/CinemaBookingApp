@@ -33,12 +33,12 @@ public class AddShowFormFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String date = txtInputDate.getText();
-                int year = Integer.parseInt(date.substring(0,3));
-                int month = Integer.parseInt(date.substring(5,6));
-                int day = Integer.parseInt(date.substring(8,9));
+                int year = Integer.parseInt(date.substring(0, 3));
+                int month = Integer.parseInt(date.substring(5, 6));
+                int day = Integer.parseInt(date.substring(8, 9));
                 String time = txtInputStartTime.getText();
-                int hour = Integer.parseInt(time.substring(0,1));
-                int minute = Integer.parseInt(time.substring(3,4));
+                int hour = Integer.parseInt(time.substring(0, 1));
+                int minute = Integer.parseInt(time.substring(3, 4));
 
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, day, hour, minute);

@@ -13,17 +13,31 @@ public class EditMovieFormFrame extends JFrame {
     private JButton btnSaveMovie;
     private JButton btnExitForm;
     private JPanel editMoviePanel;
+    private Movie m;
 
-    public EditMovieFormFrame() {
+    public EditMovieFormFrame(int movieID) {
         setTitle("Movie Changes Form");
+        setSize(800, 500);
+        setLocationRelativeTo(null);
         setContentPane(editMoviePanel);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
+
+        m = Movie.getMovie(movieID);
+        txtInputMovieTitle.setText(m.getMovieTitle());
+        txtInputDuration.setText(String.valueOf(m.getMovieDuration()));
+
 
         //executes a sql update for a movie, closes the form and goes to the previous frame afterwards
         btnSaveMovie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                m.setMovieTitle(txtInputMovieTitle.getText());
+                m.setMovieDuration(Integer.parseInt(txtInputDuration.getText()));
+                Movie.editMovie(m);
+
+                dispose();
+                MovieAdministrationFrame movieAdm = new MovieAdministrationFrame();
 
             }
         });
@@ -32,7 +46,8 @@ public class EditMovieFormFrame extends JFrame {
         btnExitForm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                dispose();
+                MovieAdministrationFrame movieAdm = new MovieAdministrationFrame();
             }
         });
     }
