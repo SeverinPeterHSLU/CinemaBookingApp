@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -28,23 +31,35 @@ public class AddShowFormFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
 
+
+        ArrayList<Movie> allMovies = Movie.getMovies();
+        for (int i = 0; i < allMovies.size(); i++) {
+            comboBoxMovie.addItem(allMovies.get(i).getMovieTitle() + "  [" + allMovies.get(i).getMovieID() + "]");
+        }
+
+       ArrayList<Room> allRooms = Room.getRooms();
+        for (int i = 0; i < allRooms.size(); i++) {
+            comboBoxRoom.addItem(allRooms.get(i).getRoomID());
+        }
+
         //closes the form, executes a sql insert for a new show and goes to the previous frame afterwards
         btnSaveShow.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String date = txtInputDate.getText();
-                int year = Integer.parseInt(date.substring(0, 3));
-                int month = Integer.parseInt(date.substring(5, 6));
-                int day = Integer.parseInt(date.substring(8, 9));
-                String time = txtInputStartTime.getText();
-                int hour = Integer.parseInt(time.substring(0, 1));
-                int minute = Integer.parseInt(time.substring(3, 4));
+                SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd HH.mm");
+                String movieTitle = (String) comboBoxMovie.getSelectedItem();
+                String movieID_asString = movieTitle.substring(movieTitle.indexOf("[") + 1, movieTitle.indexOf("]"));
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(year, month, day, hour, minute);
-                Date startOfShow = calendar.getTime();
+                int movieID = Integer.parseInt(movieID_asString);
+                int year = Integer.parseInt(txtInputDate.getText().substring(0, 4)) - 1900;
+                int month = Integer.parseInt(txtInputDate.getText().substring(5, 7));
+                int day = Integer.parseInt(txtInputDate.getText().substring(8, 10));
+                int hour = Integer.parseInt(txtInputStartTime.getText().substring(0, 2));
+                int minute = Integer.parseInt(txtInputStartTime.getText().substring(3, 5));
+                Date d = new Date(year, month, day, hour, minute);
+                df.format(d);
 
-
+                Show.addShow(d, Movie.getMovie(movieID), Room.getRoom((Integer) comboBoxRoom.getSelectedItem()));
                 dispose();
                 ShowAdministrationFrame showAdm = new ShowAdministrationFrame();
 
@@ -84,13 +99,13 @@ public class AddShowFormFrame extends JFrame {
         comboBoxMovie = new JComboBox();
         addShowPanel.add(comboBoxMovie, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         lblDate = new JLabel();
-        lblDate.setText("Date");
+        lblDate.setText("Date (yyyy.mm.dd)");
         addShowPanel.add(lblDate, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         txtInputDate = new JTextField();
         txtInputDate.setText("");
         addShowPanel.add(txtInputDate, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         lblStartTime = new JLabel();
-        lblStartTime.setText("Start Time");
+        lblStartTime.setText("Start Time (hh.mm)");
         addShowPanel.add(lblStartTime, new com.intellij.uiDesigner.core.GridConstraints(4, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         txtInputStartTime = new JTextField();
         addShowPanel.add(txtInputStartTime, new com.intellij.uiDesigner.core.GridConstraints(5, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));

@@ -14,17 +14,28 @@ public class EditRoomFormFrame extends JFrame {
     private JButton btnSaveRoom;
     private JPanel editRoomPanel;
 
-    public EditRoomFormFrame() {
+    public EditRoomFormFrame(int roomID) {
         setTitle("Room Changes Form");
+        setSize(800, 500);
+        setLocationRelativeTo(null);
         setContentPane(editRoomPanel);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
+
+        Room r = Room.getRoom(roomID);
+        txtRoomID.setText(String.valueOf(r.getRoomID()));
+        txtInputNumberOfSeats.setText(String.valueOf(r.getSeatsOfRoom()));
 
         //executes a sql update for a room, closes the form and goes to the previous frame afterwards
         btnSaveRoom.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Room changedRoom = Room.getRoom(Integer.parseInt(txtRoomID.getText()));
+                changedRoom.setSeatsOfRoom(Integer.parseInt(txtInputNumberOfSeats.getText()));
+                Room.editRoom(changedRoom);
 
+                dispose();
+                RoomAdministrationFrame roomAdministrationFrame = new RoomAdministrationFrame();
             }
         });
 
@@ -32,7 +43,8 @@ public class EditRoomFormFrame extends JFrame {
         btnExitForm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                dispose();
+                RoomAdministrationFrame roomAdministrationFrame = new RoomAdministrationFrame();
             }
         });
     }

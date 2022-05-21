@@ -29,7 +29,7 @@ public class Room {
      */
     public static boolean editRoom(Room room) {
         assert (room != null);
-        String sql = "UPDATE Room SET SeatsOfRoom = ? WHERE RoomID = ?";
+        String sql = "UPDATE Room SET AmountofSeats = ? WHERE RoomID = ?";
         try (PreparedStatement pstmnt = App.db.prepareStatement(sql)){
             pstmnt.setInt(1, room.getSeatsOfRoom());
             pstmnt.setInt(2, room.getRoomID());
@@ -55,7 +55,7 @@ public class Room {
 
             ResultSet res = pstmnt.executeQuery();
             if (res.next()) {
-                retRoom = new Room(res.getInt("RoomID"), res.getInt("SeatsOfRoom"));
+                retRoom = new Room(res.getInt("RoomID"), res.getInt("AmountofSeats"));
             }
         } catch(SQLException e) {
             e.printStackTrace();
@@ -74,7 +74,7 @@ public class Room {
             Statement stmnt = App.db.createStatement();
             ResultSet res = stmnt.executeQuery(sql);
             while (res.next()) {
-                returnList.add(new Room(res.getInt("RoomID"), res.getInt("SeatsOfRoom")));
+                returnList.add(new Room(res.getInt("RoomID"), res.getInt("AmountofSeats")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
