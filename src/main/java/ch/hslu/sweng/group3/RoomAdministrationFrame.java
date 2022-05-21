@@ -1,22 +1,61 @@
 package ch.hslu.sweng.group3;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class RoomAdministrationFrame extends JFrame {
     private JLabel lblRoomOverview;
     private JTable overviewOfRoomsTable;
     private JButton btnBackToMain;
     private JPanel roomAdministrationPanel;
+    private JPanel roomTablePanel;
 
     public RoomAdministrationFrame() {
         setTitle("Room Administration");
         setSize(1500, 800);
         setContentPane(roomAdministrationPanel);
+        setContentPane(roomAdministrationPanel);
+        roomTablePanel.setLayout(new BorderLayout());
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
+
+        DefaultTableModel model = new DefaultTableModel();
+        overviewOfRoomsTable = new JTable(model);
+        roomTablePanel.add(overviewOfRoomsTable, BorderLayout.CENTER);
+        roomTablePanel.add(new JScrollPane(overviewOfRoomsTable));
+        overviewOfRoomsTable.setModel(model);
+
+
+        Object[] headers = {"Room number", "Number of seats", "Edit"};
+        model.setColumnIdentifiers(headers);
+
+        ArrayList<Room> allRooms = Room.getRooms();
+
+
+        for (int r = 0; r < allRooms.size(); r++) {
+            String roomID = Integer.toString(allRooms.get(r).getRoomID());
+            String numberOfSeats = String.valueOf(allRooms.get(r).getSeatsOfRoom());
+
+            Object[] row = {roomID, numberOfSeats, "Edit"};
+            model.addRow(row);
+            //model.setValueAt(new JButton("Edit"), r, 3);
+        }
+        Action edit = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                Object obj = overviewOfRoomsTable.getValueAt(overviewOfRoomsTable.getSelectedRow(), 0);
+                String roomID_string = obj.toString();
+                int roomID = Integer.parseInt(roomID_string);
+                dispose();
+                EditRoomFormFrame editRoomFormFrame = new EditRoomFormFrame(roomID);
+            }
+        };
+
+        ButtonColumn editButtons = new ButtonColumn(overviewOfRoomsTable, edit, 2);
+
 
         //navigates back to mainPanel
         btnBackToMain.addActionListener(new ActionListener() {
@@ -49,11 +88,14 @@ public class RoomAdministrationFrame extends JFrame {
         lblRoomOverview = new JLabel();
         lblRoomOverview.setText("Overview of Rooms");
         roomAdministrationPanel.add(lblRoomOverview, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        overviewOfRoomsTable = new JTable();
-        roomAdministrationPanel.add(overviewOfRoomsTable, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
         btnBackToMain = new JButton();
         btnBackToMain.setText("Go Back");
         roomAdministrationPanel.add(btnBackToMain, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 0, false));
+        roomTablePanel = new JPanel();
+        roomTablePanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        roomAdministrationPanel.add(roomTablePanel, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        overviewOfRoomsTable = new JTable();
+        roomTablePanel.add(overviewOfRoomsTable, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
     }
 
     /**
@@ -62,4 +104,5 @@ public class RoomAdministrationFrame extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return roomAdministrationPanel;
     }
+
 }

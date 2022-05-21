@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -51,15 +52,15 @@ public class Show {
 
     /**
      *
-     * @return true if there is a reservation for the show, fasle if not
+     * @return true if there is a reservation for the show, false if not
      */
-    private boolean hasReservation() {
+    public static boolean hasReservation(int showID) {
         String sql = "SELECT COUNT(ShowID) FROM Reservation WHERE ShowID = ?";
         try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
-            pstmnt.setInt(1, this.showID);
+            pstmnt.setInt(1, showID);
 
             ResultSet res = pstmnt.executeQuery();
-            if (res.getInt("COUNT(MovieID)") != 0) {
+            if (res.getInt("COUNT(ShowID)") != 0) {
                 return true;
             }
         } catch (SQLException e) {
@@ -92,7 +93,7 @@ public class Show {
      */
     public static boolean editShow(Show show) {
         assert (show != null);
-        if (!show.hasReservation()) {
+        if (!show.hasReservation(show.getShowID())) {
             String sql = "UPDATE Show SET Start = ?, MovieID = ?, RoomID = ? WHERE ShowID = ?";
             try (PreparedStatement pstmnt = App.db.prepareStatement(sql)){
                 pstmnt.setDate(1, new java.sql.Date(show.getStart().getTime()));
@@ -117,7 +118,7 @@ public class Show {
      */
     public static boolean removeShow(Show show) {
         assert (show != null);
-        if (!show.hasReservation()) {
+        if (!show.hasReservation(show.getShowID())) {
             String sql = "DELETE FROM Show WHERE ShowID = ?";
             try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
                 pstmnt.setInt(1, show.getShowID());
@@ -140,8 +141,8 @@ public class Show {
     public static Show getShow(int showID) {
         assert (showID >= 0);
         String sql = "SELECT * FROM Show " +
-                "INNER JOIN Movie ON Show.MovieID=Movie.MovieID" +
-                "INNER JOIN Room ON Show.RoomID=Room.RoomID" +
+                "INNER JOIN Movie ON Show.MovieID=Movie.MovieID " +
+                "INNER JOIN Room ON Show.RoomID=Room.RoomID " +
                 "WHERE ShowID = ?";
         Show retShow = null;
         try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
@@ -152,7 +153,7 @@ public class Show {
                 retShow = new Show(res.getInt("ShowID"), res.getDate("Start"),
                             new Movie(res.getInt("MovieID"), res.getString("Title"),
                                 res.getInt("Duration"), res.getBoolean("IsActive")),
-                            new Room(res.getInt("RoomID"), res.getInt("SeatsOfRoom")));
+                            new Room(res.getInt("RoomID"), res.getInt("AmountOfSeats")));
             }
         } catch(SQLException e) {
             e.printStackTrace();
@@ -167,7 +168,7 @@ public class Show {
     public static ArrayList<Show> getShows() {
         ArrayList<Show> returnList = new ArrayList<>();
         String sqlSelect = "SELECT * FROM Show " +
-                "INNER JOIN Movie ON Show.MovieID=Movie.MovieID" +
+                "INNER JOIN Movie ON Show.MovieID=Movie.MovieID " +
                 "INNER JOIN Room ON Show.RoomID=Room.RoomID";
         try {
             Statement stmnt = App.db.createStatement();
@@ -176,7 +177,7 @@ public class Show {
                 returnList.add(new Show(res.getInt("ShowID"), res.getDate("Start"),
                         new Movie(res.getInt("MovieID"), res.getString("Title"),
                                 res.getInt("Duration"), res.getBoolean("IsActive")),
-                        new Room(res.getInt("RoomID"), res.getInt("SeatsOfRoom"))));
+                        new Room(res.getInt("RoomID"), res.getInt("AmountOfSeats"))));
             }
         } catch (SQLException e) {
             e.printStackTrace();

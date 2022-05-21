@@ -32,10 +32,10 @@ public class Movie {
      *
      * @return true if there is a show in the DB that shows the movie, false if not
      */
-    private boolean hasShow() {
+    public static boolean hasShow(int movieID) {
         String sql = "SELECT COUNT(MovieID) FROM Show WHERE MovieID = ?";
         try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
-            pstmnt.setInt(1, this.movieID);
+            pstmnt.setInt(1, movieID);
 
             ResultSet res = pstmnt.executeQuery();
             if (res.getInt("COUNT(MovieID)") != 0) {
@@ -73,7 +73,7 @@ public class Movie {
      */
     public static boolean editMovie(Movie movie) {
         assert (movie != null);
-        if (!movie.hasShow()) {
+        if (!movie.hasShow(movie.getMovieID())) {
             String sql = "UPDATE Movie SET Title = ? , Duration = ? , IsActive = ? WHERE MovieID = ?";
             try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
                 pstmnt.setString(1, movie.getMovieTitle());
@@ -99,7 +99,7 @@ public class Movie {
     public static boolean removeMovie(Movie movie) {
         assert (movie != null);
         String sql = "DELETE FROM Movie WHERE MovieID = ?";
-        if (!movie.hasShow()) {
+        if (!movie.hasShow(movie.getMovieID())) {
             try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
                 pstmnt.setInt(1, movie.getMovieID());
 

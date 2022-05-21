@@ -27,7 +27,7 @@
           <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Date"/>
+          <text value="Date (yyyy.mm.dd)"/>
         </properties>
       </component>
       <component id="8d724" class="javax.swing.JTextField" binding="txtInputDate">
@@ -45,7 +45,7 @@
           <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Start Time"/>
+          <text value="Start Time (hh.mm)"/>
         </properties>
       </component>
       <component id="78704" class="javax.swing.JTextField" binding="txtInputStartTime">

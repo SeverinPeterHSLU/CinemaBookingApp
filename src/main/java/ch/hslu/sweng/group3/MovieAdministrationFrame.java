@@ -3,11 +3,9 @@ package ch.hslu.sweng.group3;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class MovieAdministrationFrame extends JFrame {
@@ -62,12 +60,15 @@ public class MovieAdministrationFrame extends JFrame {
         };
         Action delete = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("hello");
                 Object obj = activeMoviesTable.getValueAt(activeMoviesTable.getSelectedRow(), 0);
                 String movieID_string = obj.toString();
                 int movieID = Integer.parseInt(movieID_string);
-                Movie m = Movie.getMovie(movieID);
-                Movie.removeMovie(m);
+                if (Movie.hasShow(movieID)) {
+                    InfoBox.infoBox("There are shows planned for this movie. Therefore it cannot be removed.", "Information");
+                } else {
+                    Movie m = Movie.getMovie(movieID);
+                    Movie.removeMovie(m);
+                }
                 dispose();
                 MovieAdministrationFrame newMovieAdministrationFrame = new MovieAdministrationFrame();
             }

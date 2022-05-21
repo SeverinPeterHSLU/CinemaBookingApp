@@ -1,9 +1,13 @@
 package ch.hslu.sweng.group3;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class ShowAdministrationFrame extends JFrame {
     private JLabel lblCurrentShows;
@@ -11,20 +15,77 @@ public class ShowAdministrationFrame extends JFrame {
     private JButton btnAddShow;
     private JButton btnBackToMain;
     private JPanel showAdministrationPanel;
+    private JPanel showTablePanel;
 
     public ShowAdministrationFrame() {
         setTitle("Show Administration");
         setSize(1500, 800);
         setContentPane(showAdministrationPanel);
+        showTablePanel.setLayout(new BorderLayout());
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
+
+        DefaultTableModel model = new DefaultTableModel();
+        currentShowsTable = new JTable(model);
+        showTablePanel.add(currentShowsTable, BorderLayout.CENTER);
+        showTablePanel.add(new JScrollPane(currentShowsTable));
+        currentShowsTable.setModel(model);
+
+
+        Object[] headers = {"Show ID", "Start", "MovieID", "Movie Title", "Room", "Edit", "Delete"};
+        model.setColumnIdentifiers(headers);
+
+
+        ArrayList<Show> allShows = Show.getShows();
+
+
+        for (int s = 0; s < allShows.size(); s++) {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd HH.mm");
+            String showID = Integer.toString(allShows.get(s).getShowID());
+            Date d = allShows.get(s).getStart();
+            String startOfShow = df.format(d);
+            String movieID = String.valueOf(allShows.get(s).getMovie().getMovieID());
+            String movieTitle = String.valueOf(allShows.get(s).getMovie().getMovieTitle());
+            Room r = allShows.get(s).getRoom();
+            String roomID = String.valueOf(r.getRoomID());
+
+            Object[] row = {showID, startOfShow, movieID, movieTitle, roomID, "Edit", "Delete"};
+            model.addRow(row);
+        }
+        Action edit = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                Object obj = currentShowsTable.getValueAt(currentShowsTable.getSelectedRow(), 0);
+                String showID_String = obj.toString();
+                int showID = Integer.parseInt(showID_String);
+                dispose();
+                EditShowFormFrame editShowFormFrame = new EditShowFormFrame(showID);
+            }
+        };
+        Action delete = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                Object obj = currentShowsTable.getValueAt(currentShowsTable.getSelectedRow(), 0);
+                String showID_string = obj.toString();
+                int showID = Integer.parseInt(showID_string);
+                if (Show.hasReservation(showID)) {
+                    InfoBox.infoBox("There are reservations booked already for this show. Therefore it cannot be removed.", "Information");
+                } else {
+                    Show s = Show.getShow(showID);
+                    Show.removeShow(s);
+                }
+                dispose();
+                ShowAdministrationFrame newShowAdministrationFrame = new ShowAdministrationFrame();
+            }
+        };
+
+        ButtonColumn editButtons = new ButtonColumn(currentShowsTable, edit, 5);
+        ButtonColumn deleteButtons = new ButtonColumn(currentShowsTable, delete, 6);
 
         //opens form to create new show entry
         btnAddShow.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                AddMovieFormFrame addMovieForm = new AddMovieFormFrame();
+                AddShowFormFrame addMovieForm = new AddShowFormFrame();
             }
         });
 
@@ -58,14 +119,17 @@ public class ShowAdministrationFrame extends JFrame {
         lblCurrentShows = new JLabel();
         lblCurrentShows.setText("Upcoming Shows");
         showAdministrationPanel.add(lblCurrentShows, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        currentShowsTable = new JTable();
-        showAdministrationPanel.add(currentShowsTable, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
         btnAddShow = new JButton();
         btnAddShow.setText("Add Show");
         showAdministrationPanel.add(btnAddShow, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 0, false));
         btnBackToMain = new JButton();
         btnBackToMain.setText("Go Back");
         showAdministrationPanel.add(btnBackToMain, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 0, false));
+        showTablePanel = new JPanel();
+        showTablePanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        showAdministrationPanel.add(showTablePanel, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        currentShowsTable = new JTable();
+        showTablePanel.add(currentShowsTable, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
     }
 
     /**
@@ -74,4 +138,5 @@ public class ShowAdministrationFrame extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return showAdministrationPanel;
     }
+
 }

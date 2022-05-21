@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class EditShowFormFrame extends JFrame {
     private JLabel lblMovieTitle;
@@ -18,16 +21,57 @@ public class EditShowFormFrame extends JFrame {
     private JButton btnExitForm;
     private JPanel editShowPanel;
 
-    public EditShowFormFrame() {
+    public EditShowFormFrame(int showID) {
         setTitle("Show Changes Form");
+        setSize(800, 500);
+        setLocationRelativeTo(null);
         setContentPane(editShowPanel);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
+
+        ArrayList<Movie> allMovies = Movie.getMovies();
+        for (int i = 0; i < allMovies.size(); i++) {
+            comboBoxMovie.addItem(allMovies.get(i).getMovieTitle() + "  [" + allMovies.get(i).getMovieID() + "]");
+        }
+
+        ArrayList<Room> allRooms = Room.getRooms();
+        for (int i = 0; i < allRooms.size(); i++) {
+            comboBoxRoom.addItem(allRooms.get(i).getRoomID());
+        }
+        SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd");
+        SimpleDateFormat tf = new SimpleDateFormat("HH.mm");
+
+        Movie m = Show.getShow(showID).getMovie();
+        comboBoxMovie.setSelectedItem(m.getMovieTitle() + "  [" + m.getMovieID() + "]");
+        txtInputDate.setText(df.format(Show.getShow(showID).getStart()));
+        txtInputStartTime.setText(tf.format(Show.getShow(showID).getStart()));
+        comboBoxRoom.setSelectedItem(Show.getShow(showID).getRoom().getRoomID());
+
 
         //executes a sql update for a show, closes the form and goes to the previous frame afterwards
         btnSaveShow.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Show editedShow = Show.getShow(showID);
+                SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd HH.mm");
+                String movieTitle = (String) comboBoxMovie.getSelectedItem();
+                String movieID_asString = movieTitle.substring(movieTitle.indexOf("[") + 1, movieTitle.indexOf("]"));
+                editedShow.setMovie(Movie.getMovie(Integer.parseInt(movieID_asString)));
+
+                int movieID = Integer.parseInt(movieID_asString);
+                int year = Integer.parseInt(txtInputDate.getText().substring(0, 4)) - 1900;
+                int month = Integer.parseInt(txtInputDate.getText().substring(5, 7));
+                int day = Integer.parseInt(txtInputDate.getText().substring(8, 10));
+                int hour = Integer.parseInt(txtInputStartTime.getText().substring(0, 2));
+                int minute = Integer.parseInt(txtInputStartTime.getText().substring(3, 5));
+                Date d = new Date(year, month, day, hour, minute);
+                df.format(d);
+                editedShow.setStart(d);
+                editedShow.setRoom(Room.getRoom((Integer) comboBoxRoom.getSelectedItem()));
+
+                Show.editShow(editedShow);
+                dispose();
+                ShowAdministrationFrame showAdm = new ShowAdministrationFrame();
 
             }
         });
@@ -36,6 +80,8 @@ public class EditShowFormFrame extends JFrame {
         btnExitForm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                dispose();
+                ShowAdministrationFrame showAdministrationFrame = new ShowAdministrationFrame();
 
             }
         });
