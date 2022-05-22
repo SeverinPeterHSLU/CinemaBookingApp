@@ -27,7 +27,7 @@ public class ReservationAdministrationFrame extends JFrame {
                 int reservationNumber = Integer.parseInt(txtInputReservationNumber.getText());
                 Reservation r = Reservation.getReservation(reservationNumber);
                 dispose();
-                EditReservationFormFrame editReservationFormFrame = new EditReservationFormFrame(reservationNumber);
+                EditReservationFormFrame editReservationFormFrame = new EditReservationFormFrame(r);
             }
         });
 
