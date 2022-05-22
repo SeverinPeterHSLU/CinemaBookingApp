@@ -39,8 +39,14 @@ public class AddReservationFormFrame extends JFrame {
                 }
                 Customer newCustomer = Customer.getCustomerByEmail(txtInputEmail.getText());
                 int numberOfSeats = Integer.parseInt(txtInputNumberOfSeats.getText());
-                int reservationNumber = Reservation.addReservation(numberOfSeats, newCustomer, s);
-                InfoBox.infoBox("The reservation number for the customer is the following: " + reservationNumber, "Reservation Number");
+                if (s.seatsAvailable() < numberOfSeats) {
+                    InfoBox.infoBox("The number of currently available seats is: " + s.seatsAvailable() + "\n therefore this reservation cannot be created.", "Reservation Number");
+                } else {
+                    System.out.println(s.seatsAvailable());
+                    int reservationNumber = Reservation.addReservation(numberOfSeats, newCustomer, s);
+                    InfoBox.infoBox("The reservation number for the customer is the following: " + reservationNumber, "Reservation Number");
+                }
+
 
                 dispose();
                 MainFrame mainFrame = new MainFrame();
