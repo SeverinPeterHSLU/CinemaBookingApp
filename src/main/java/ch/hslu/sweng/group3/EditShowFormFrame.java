@@ -69,7 +69,8 @@ public class EditShowFormFrame extends JFrame {
                     Date d = new Date(year, month, day, hour, minute);
                     if (ExceptionCheck.isDateInFuture(d, df) == true) {
                         df.format(d);
-                        Show.addShow(d, Movie.getMovie(movieID), Room.getRoom((Integer) comboBoxRoom.getSelectedItem()));
+                        editedShow.setStart(d);
+                        Show.editShow(editedShow);
                     }
                 }
                 dispose();
