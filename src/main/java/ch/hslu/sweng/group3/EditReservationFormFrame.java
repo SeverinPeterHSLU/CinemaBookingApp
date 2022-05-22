@@ -18,14 +18,15 @@ public class EditReservationFormFrame extends JFrame {
     private JCheckBox checkBoxCollectedRes;
     private JPanel editReservationPanel;
 
-    public EditReservationFormFrame(int reservationNumber) {
+    public EditReservationFormFrame(Reservation res) {
         setTitle("Reservation Changes Form");
         setSize(800, 500);
         setLocationRelativeTo(null);
         setContentPane(editReservationPanel);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
-        Reservation res = Reservation.getReservation(reservationNumber);
+
+
         txtInputShowID.setText(String.valueOf(res.getShow().getShowID()));
         txtInputEmail.setText(res.getCustomer().getEmail());
         txtInputNumberOfSeats.setText(String.valueOf(res.getNumberOfSeats()));
@@ -38,14 +39,13 @@ public class EditReservationFormFrame extends JFrame {
         btnSaveReservation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Reservation editedRes = Reservation.getReservation(reservationNumber);
-                Customer newCustomer = editedRes.getCustomer();
+                Customer newCustomer = res.getCustomer();
                 newCustomer.setEmail(txtInputEmail.getText());
-                editedRes.setCustomer(newCustomer);
-                editedRes.setNumberOfSeats(Integer.parseInt(txtInputNumberOfSeats.getText()));
-                editedRes.setCollected(checkBoxCollectedRes.isSelected());
+                res.setCustomer(newCustomer);
+                res.setNumberOfSeats(Integer.parseInt(txtInputNumberOfSeats.getText()));
+                res.setCollected(checkBoxCollectedRes.isSelected());
 
-                Reservation.editReservation(editedRes);
+                Reservation.editReservation(res);
                 dispose();
                 ReservationAdministrationFrame reservationAdministrationFrame = new ReservationAdministrationFrame();
             }
