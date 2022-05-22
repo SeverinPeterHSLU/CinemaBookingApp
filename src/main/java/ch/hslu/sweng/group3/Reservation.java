@@ -109,11 +109,11 @@ public class Reservation {
      * @return the loaded reservation object loaded from the db, null if no such entry
      */
     public static Reservation getReservation(int reservationID) {
-        String sql = "SELECT * FROM Reservation " +
-                "INNER JOIN Show ON Reservation.ShowID = Show.ShowID " +
-                "INNER JOIN Customer ON Reservation.CustomerID = Customer.CustomerID " +
-                "INNER JOIN Movie ON Show.MovieID=Movie.MovieID " +
-                "INNER JOIN Room ON Show.RoomID=Room.RoomID " +
+        String sql = "SELECT * FROM Reservation\n" +
+                "INNER JOIN Show ON Reservation.ShowID = Show.ShowID\n" +
+                "INNER JOIN Customer ON Reservation.CustomerID = Customer.CustomerID\n" +
+                "INNER JOIN Movie ON Show.MovieID=Movie.MovieID\n" +
+                "INNER JOIN Room ON Show.RoomID=Room.RoomID\n" +
                 "WHERE ReservationID = ?";
         Reservation retReservation = null;
         try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
@@ -141,10 +141,10 @@ public class Reservation {
      */
     public static ArrayList<Reservation> getReservations() {
         ArrayList<Reservation> returnList = new ArrayList<>();
-        String sqlSelect = "SELECT * FROM Reservation " +
-                "INNER JOIN Show ON Reservation.ShowID = Show.ShowID " +
-                "INNER JOIN Customer ON Reservation.CustomerID = Customer.CustomerID " +
-                "INNER JOIN Movie ON Show.MovieID=Movie.MovieID " +
+        String sqlSelect = "SELECT * FROM Reservation\n" +
+                "INNER JOIN Show ON Reservation.ShowID = Show.ShowID\n" +
+                "INNER JOIN Customer ON Reservation.CustomerID = Customer.CustomerID\n" +
+                "INNER JOIN Movie ON Show.MovieID=Movie.MovieID\n" +
                 "INNER JOIN Room ON Show.RoomID=Room.RoomID";
         try {
             Statement stmnt = App.db.createStatement();
