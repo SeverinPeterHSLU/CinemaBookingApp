@@ -72,7 +72,7 @@ public class Show {
     public int seatsAvailable() {
         ArrayList<Reservation> resrevations = new ArrayList<>();
         int bookedSeats = 0;
-        String sql = "SELECT ReservationID FROM Reservation WHERE ShowID = ?";
+        String sql = "SELECT NumberOfSeats FROM Reservation WHERE ShowID = ?";
         try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
             pstmnt.setInt(1, showID);
 
