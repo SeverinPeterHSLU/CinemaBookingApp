@@ -38,7 +38,6 @@ public class App {
     }
 
     public static void main(String[] args) {
-        MainFrame mainframe = new MainFrame();
 
         try {
             db = DriverManager.getConnection("jdbc:sqlite:DataBase.db");
@@ -51,6 +50,8 @@ public class App {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        new MainFrame().setVisible(true);
     }
 
 }

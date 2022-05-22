@@ -60,7 +60,7 @@ public class EditShowFormFrame extends JFrame {
 
                 int movieID = Integer.parseInt(movieID_asString);
                 int year = Integer.parseInt(txtInputDate.getText().substring(0, 4)) - 1900;
-                int month = Integer.parseInt(txtInputDate.getText().substring(5, 7));
+                int month = Integer.parseInt(txtInputDate.getText().substring(5, 7)) - 1;
                 int day = Integer.parseInt(txtInputDate.getText().substring(8, 10));
                 int hour = Integer.parseInt(txtInputStartTime.getText().substring(0, 2));
                 int minute = Integer.parseInt(txtInputStartTime.getText().substring(3, 5));
@@ -138,4 +138,5 @@ public class EditShowFormFrame extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return editShowPanel;
     }
+
 }
