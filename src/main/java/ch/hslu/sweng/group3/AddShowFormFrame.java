@@ -60,8 +60,19 @@ public class AddShowFormFrame extends JFrame {
                     int minute = Integer.parseInt(txtInputStartTime.getText().substring(3, 5));
                     Date d = new Date(year, month, day, hour, minute);
                     if (ExceptionCheck.isDateInFuture(d, df) == true) {
+                        Movie movie = Movie.getMovie(movieID);
+                        Room room = Room.getRoom((Integer) comboBoxRoom.getSelectedItem());
+                        Calendar c = Calendar.getInstance();
+                        c.setTime(d);
+                        c.add(Calendar.MINUTE, movie.getMovieDuration());
+                        Date d2 = c.getTime();
                         df.format(d);
-                        Show.addShow(d, Movie.getMovie(movieID), Room.getRoom((Integer) comboBoxRoom.getSelectedItem()));
+                        df.format(d2);
+                        if (!room.isOccupied(d, d2)) {
+                            Show.addShow(d, Movie.getMovie(movieID), Room.getRoom((Integer) comboBoxRoom.getSelectedItem()));
+                        } else {
+                            InfoBox.infoBox("This Room is occupied at the requested time, plesae select other room or change time", "Room Occupied");
+                        }
                     }
                 }
                 dispose();

@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class EditShowFormFrame extends JFrame {
@@ -57,7 +58,7 @@ public class EditShowFormFrame extends JFrame {
                 String movieTitle = (String) comboBoxMovie.getSelectedItem();
                 String movieID_asString = movieTitle.substring(movieTitle.indexOf("[") + 1, movieTitle.indexOf("]"));
                 editedShow.setMovie(Movie.getMovie(Integer.parseInt(movieID_asString)));
-                int movieID = Integer.parseInt(movieID_asString);
+                editedShow.setRoom(Room.getRoom((int) comboBoxRoom.getSelectedItem()));
 
                 String dateToInsert = txtInputDate.getText() + " " + txtInputStartTime.getText();
                 if (ExceptionCheck.isValidDateFormat(txtInputDate.getText(), txtInputStartTime.getText()) == true) {
@@ -68,9 +69,18 @@ public class EditShowFormFrame extends JFrame {
                     int minute = Integer.parseInt(txtInputStartTime.getText().substring(3, 5));
                     Date d = new Date(year, month, day, hour, minute);
                     if (ExceptionCheck.isDateInFuture(d, df) == true) {
+                        Calendar c = Calendar.getInstance();
+                        c.setTime(d);
+                        c.add(Calendar.MINUTE, editedShow.getMovie().getMovieDuration());
+                        Date d2 = c.getTime();
                         df.format(d);
-                        editedShow.setStart(d);
-                        Show.editShow(editedShow);
+                        df.format(d2);
+                        if (!editedShow.getRoom().isOccupied(d, d2)) {
+                            editedShow.setStart(d);
+                            Show.editShow(editedShow);
+                        } else {
+                            InfoBox.infoBox("This Room is occupied at the requested time, plesae select other room or change time", "Room Occupied");
+                        }
                     }
                 }
                 dispose();
