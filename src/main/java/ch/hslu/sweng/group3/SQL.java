@@ -38,4 +38,13 @@ public class SQL {
             "    CustomerID    INT     REFERENCES Customer (CustomerID),\n" +
             "    ShowID        INT     REFERENCES Show (ShowID)\n" +
             ");";
+
+    public static final String insertRoom1 = "INSERT INTO Room(RoomID,AmountOfSeats) \n" +
+                                                "Values(1,50);";
+
+    public static final String insertRoom2 = "INSERT INTO Room(RoomID,AmountOfSeats) \n" +
+                                                "Values(2,25);";
+
+    public static final String insertRoom3 = "INSERT INTO Room(RoomID,AmountOfSeats) \n" +
+                                                "Values(3,100);";
 }

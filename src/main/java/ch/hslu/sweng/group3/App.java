@@ -32,6 +32,9 @@ public class App {
             stmnt.execute(SQL.customerTable);
             stmnt.execute(SQL.showTable);
             stmnt.execute(SQL.reservationTable);
+            stmnt.execute(SQL.insertRoom1);
+            stmnt.execute(SQL.insertRoom2);
+            stmnt.execute(SQL.insertRoom3);
         } catch(SQLException e) {
             e.printStackTrace();
         }
