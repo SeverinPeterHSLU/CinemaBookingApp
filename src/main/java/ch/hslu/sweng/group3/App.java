@@ -5,7 +5,6 @@ import java.sql.*;
 public class App {
 
     protected static Connection db;
-    MainFrame mainframe = new MainFrame();
 
     private static boolean hasNoTables() {
         String sql = "SELECT name FROM sqlite_schema\n" +

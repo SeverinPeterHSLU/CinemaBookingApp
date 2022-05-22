@@ -41,7 +41,6 @@ public class AddReservationFormFrame extends JFrame {
                 int numberOfSeats = Integer.parseInt(txtInputNumberOfSeats.getText());
                 Reservation.addReservation(numberOfSeats, newCustomer, s);
 
-
                 dispose();
                 MainFrame mainFrame = new MainFrame();
             }

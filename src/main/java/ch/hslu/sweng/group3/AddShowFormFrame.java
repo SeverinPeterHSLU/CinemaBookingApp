@@ -49,20 +49,23 @@ public class AddShowFormFrame extends JFrame {
                 SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd HH.mm");
                 String movieTitle = (String) comboBoxMovie.getSelectedItem();
                 String movieID_asString = movieTitle.substring(movieTitle.indexOf("[") + 1, movieTitle.indexOf("]"));
-
                 int movieID = Integer.parseInt(movieID_asString);
-                int year = Integer.parseInt(txtInputDate.getText().substring(0, 4)) - 1900;
-                int month = Integer.parseInt(txtInputDate.getText().substring(5, 7)) - 1;
-                int day = Integer.parseInt(txtInputDate.getText().substring(8, 10));
-                int hour = Integer.parseInt(txtInputStartTime.getText().substring(0, 2));
-                int minute = Integer.parseInt(txtInputStartTime.getText().substring(3, 5));
-                Date d = new Date(year, month, day, hour, minute);
-                df.format(d);
 
-                Show.addShow(d, Movie.getMovie(movieID), Room.getRoom((Integer) comboBoxRoom.getSelectedItem()));
+                String dateToInsert = txtInputDate.getText() + " " + txtInputStartTime.getText();
+                if (ExceptionCheck.isValidDateFormat(txtInputDate.getText(), txtInputStartTime.getText()) == true) {
+                    int year = Integer.parseInt(txtInputDate.getText().substring(0, 4)) - 1900;
+                    int month = Integer.parseInt(txtInputDate.getText().substring(5, 7)) - 1;
+                    int day = Integer.parseInt(txtInputDate.getText().substring(8, 10));
+                    int hour = Integer.parseInt(txtInputStartTime.getText().substring(0, 2));
+                    int minute = Integer.parseInt(txtInputStartTime.getText().substring(3, 5));
+                    Date d = new Date(year, month, day, hour, minute);
+                    if (ExceptionCheck.isDateInFuture(d, df) == true) {
+                        df.format(d);
+                        Show.addShow(d, Movie.getMovie(movieID), Room.getRoom((Integer) comboBoxRoom.getSelectedItem()));
+                    }
+                }
                 dispose();
                 ShowAdministrationFrame showAdm = new ShowAdministrationFrame();
-
             }
         });
 
