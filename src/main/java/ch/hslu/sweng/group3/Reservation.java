@@ -68,13 +68,14 @@ public class Reservation {
      */
     public static boolean editReservation(Reservation reservation) {
         assert (reservation != null);
-        String sql = "UPDATE Reservation SET NumberOFSeats = ?, CustomerID = ?, ShowID = ? WHERE ReservationID = ?";
+        String sql = "UPDATE Reservation SET NumberOFSeats = ?, CustomerID = ?, ShowID = ?, IsCollected = ? WHERE ReservationID = ?";
         try (PreparedStatement pstmnt = App.db.prepareStatement(sql)){
             pstmnt.setInt(1, reservation.getNumberOfSeats());
             pstmnt.setInt(2, reservation.getShow().getShowID());
             pstmnt.setInt(3, reservation.getCustomer().getCustomerID());
+            pstmnt.setBoolean(4, reservation.isCollected());
 
-            pstmnt.setInt(4, reservation.getReservationID());
+            pstmnt.setInt(5, reservation.getReservationID());
 
             pstmnt.executeUpdate();
             return true;
