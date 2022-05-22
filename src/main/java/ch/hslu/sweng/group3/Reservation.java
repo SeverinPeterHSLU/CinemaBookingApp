@@ -141,12 +141,11 @@ public class Reservation {
      */
     public static ArrayList<Reservation> getReservations() {
         ArrayList<Reservation> returnList = new ArrayList<>();
-        String sqlSelect = "SELECT * FROM Reservation" +
+        String sqlSelect = "SELECT * FROM Reservation " +
                 "INNER JOIN Show ON Reservation.ShowID = Show.ShowID " +
                 "INNER JOIN Customer ON Reservation.CustomerID = Customer.CustomerID " +
-                "INNER JOIN Movie ON Show.MovieID=Movie.MovieID" +
-                "INNER JOIN Room ON Show.RoomID=Room.RoomID" +
-                "WHERE ReservationID = ?";
+                "INNER JOIN Movie ON Show.MovieID=Movie.MovieID " +
+                "INNER JOIN Room ON Show.RoomID=Room.RoomID";
         try {
             Statement stmnt = App.db.createStatement();
             ResultSet res = stmnt.executeQuery(sqlSelect);
@@ -157,7 +156,7 @@ public class Reservation {
                         new Show(res.getInt("ShowID"), res.getDate("Start"),
                                 new Movie(res.getInt("MovieID"), res.getString("Title"),
                                         res.getInt("Duration"), res.getBoolean("IsActive")),
-                                new Room(res.getInt("RoomID"), res.getInt("SeatsOfRoom")))));
+                                new Room(res.getInt("RoomID"), res.getInt("AmountOfSeats")))));
             }
         } catch (SQLException e) {
             e.printStackTrace();
