@@ -1,9 +1,15 @@
 package ch.hslu.sweng.group3;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+import static ch.hslu.sweng.group3.Show.getShows;
 
 public class MainFrame extends JFrame {
     private JPanel mainPanel;
@@ -14,6 +20,7 @@ public class MainFrame extends JFrame {
     private JButton btnShowAdm;
     private JButton btnResAdm;
     private JButton btnRoomAdm;
+    private JPanel showOverviewTablePanel;
 
     public MainFrame() {
         setTitle("Cinema Booking System");
@@ -22,6 +29,47 @@ public class MainFrame extends JFrame {
         setContentPane(mainPanel);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
+
+        showOverviewTablePanel.setLayout(new BorderLayout());
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setVisible(true);
+
+        DefaultTableModel model = new DefaultTableModel();
+        weekProgramTable = new JTable(model);
+        showOverviewTablePanel.add(weekProgramTable, BorderLayout.CENTER);
+        showOverviewTablePanel.add(new JScrollPane(weekProgramTable));
+        weekProgramTable.setModel(model);
+
+
+        Object[] headers = {"Show ID", "Start", "MovieID", "Movie Title", "Room", "Add Reservation"};
+        model.setColumnIdentifiers(headers);
+
+       ArrayList<Show> showsOfTheWeek = Show.getShows();
+
+        for (int s = 0; s < showsOfTheWeek.size(); s++) {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd HH.mm");
+            String showID = Integer.toString(showsOfTheWeek.get(s).getShowID());
+            Date d = showsOfTheWeek.get(s).getStart();
+            String startOfShow = df.format(d);
+            String movieID = String.valueOf(showsOfTheWeek.get(s).getMovie().getMovieID());
+            String movieTitle = String.valueOf(showsOfTheWeek.get(s).getMovie().getMovieTitle());
+            Room r = showsOfTheWeek.get(s).getRoom();
+            String roomID = String.valueOf(r.getRoomID());
+
+            Object[] row = {showID, startOfShow, movieID, movieTitle, roomID, "Add Reservation"};
+            model.addRow(row);
+        }
+        Action addRes = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                Object obj = weekProgramTable.getValueAt(weekProgramTable.getSelectedRow(), 0);
+                String showID_String = obj.toString();
+                int showID = Integer.parseInt(showID_String);
+                dispose();
+                AddReservationFormFrame addReservationFormFrame = new AddReservationFormFrame(showID);
+            }
+        };
+
+        ButtonColumn editButtons = new ButtonColumn(weekProgramTable, addRes, 5);
 
         //navigate to Movie Administration
         btnMovieAdm.addActionListener(new ActionListener() {
@@ -92,11 +140,17 @@ public class MainFrame extends JFrame {
         btnRoomAdm = new JButton();
         btnRoomAdm.setText("Room Adm");
         navigationPanel.add(btnRoomAdm, new com.intellij.uiDesigner.core.GridConstraints(0, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 1, false));
+        showOverviewTablePanel = new JPanel();
+        showOverviewTablePanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        mainPanel.add(showOverviewTablePanel, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        weekProgramTable = new JTable();
+        showOverviewTablePanel.add(weekProgramTable, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        mainPanel.add(panel1, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         lblMovieOverviewTable = new JLabel();
         lblMovieOverviewTable.setText("Movie Overview of the Week");
-        mainPanel.add(lblMovieOverviewTable, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        weekProgramTable = new JTable();
-        mainPanel.add(weekProgramTable, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
+        panel1.add(lblMovieOverviewTable, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_NORTH, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
@@ -105,4 +159,5 @@ public class MainFrame extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return mainPanel;
     }
+
 }

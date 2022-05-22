@@ -19,12 +19,15 @@ public class ReservationAdministrationFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
 
+
         //opens form to create new reservation
         btnSearchReservation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                int reservationNumber = Integer.parseInt(txtInputReservationNumber.getText());
+                Reservation r = Reservation.getReservation(reservationNumber);
                 dispose();
-                AddReservationFormFrame addResForm = new AddReservationFormFrame();
+                EditReservationFormFrame editReservationFormFrame = new EditReservationFormFrame(reservationNumber);
             }
         });
 
@@ -75,4 +78,5 @@ public class ReservationAdministrationFrame extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return reservationAdministrationPanel;
     }
+
 }

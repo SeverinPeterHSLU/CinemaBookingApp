@@ -101,4 +101,7 @@ public class Customer {
     public int getCustomerID() { return customerID; }
 
     public String getEmail() { return email;}
+
+    public void setEmail(String email) {
+        this.email = email; }
 }

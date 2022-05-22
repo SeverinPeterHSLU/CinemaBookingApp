@@ -37,7 +37,7 @@ public class AddShowFormFrame extends JFrame {
             comboBoxMovie.addItem(allMovies.get(i).getMovieTitle() + "  [" + allMovies.get(i).getMovieID() + "]");
         }
 
-       ArrayList<Room> allRooms = Room.getRooms();
+        ArrayList<Room> allRooms = Room.getRooms();
         for (int i = 0; i < allRooms.size(); i++) {
             comboBoxRoom.addItem(allRooms.get(i).getRoomID());
         }
@@ -52,7 +52,7 @@ public class AddShowFormFrame extends JFrame {
 
                 int movieID = Integer.parseInt(movieID_asString);
                 int year = Integer.parseInt(txtInputDate.getText().substring(0, 4)) - 1900;
-                int month = Integer.parseInt(txtInputDate.getText().substring(5, 7));
+                int month = Integer.parseInt(txtInputDate.getText().substring(5, 7)) - 1;
                 int day = Integer.parseInt(txtInputDate.getText().substring(8, 10));
                 int hour = Integer.parseInt(txtInputStartTime.getText().substring(0, 2));
                 int minute = Integer.parseInt(txtInputStartTime.getText().substring(3, 5));

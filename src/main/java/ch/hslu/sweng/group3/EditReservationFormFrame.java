@@ -18,17 +18,36 @@ public class EditReservationFormFrame extends JFrame {
     private JCheckBox checkBoxCollectedRes;
     private JPanel editReservationPanel;
 
-    public EditReservationFormFrame() {
+    public EditReservationFormFrame(int reservationNumber) {
         setTitle("Reservation Changes Form");
+        setSize(800, 500);
+        setLocationRelativeTo(null);
         setContentPane(editReservationPanel);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
+        Reservation res = Reservation.getReservation(reservationNumber);
+        txtInputShowID.setText(String.valueOf(res.getShow().getShowID()));
+        txtInputEmail.setText(res.getCustomer().getEmail());
+        txtInputNumberOfSeats.setText(String.valueOf(res.getNumberOfSeats()));
+        checkBoxCollectedRes.setSelected(res.isCollected());
+
+
+
 
         //executes a sql update for a reservation, closes the form and goes to the previous frame afterwards
         btnSaveReservation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Reservation editedRes = Reservation.getReservation(reservationNumber);
+                Customer newCustomer = editedRes.getCustomer();
+                newCustomer.setEmail(txtInputEmail.getText());
+                editedRes.setCustomer(newCustomer);
+                editedRes.setNumberOfSeats(Integer.parseInt(txtInputNumberOfSeats.getText()));
+                editedRes.setCollected(checkBoxCollectedRes.isSelected());
 
+                Reservation.editReservation(editedRes);
+                dispose();
+                ReservationAdministrationFrame reservationAdministrationFrame = new ReservationAdministrationFrame();
             }
         });
 
@@ -36,6 +55,9 @@ public class EditReservationFormFrame extends JFrame {
         btnExitForm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                dispose();
+                ReservationAdministrationFrame reservationAdministrationFrame = new ReservationAdministrationFrame();
 
             }
         });

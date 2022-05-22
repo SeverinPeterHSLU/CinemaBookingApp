@@ -17,7 +17,7 @@ public class AddReservationFormFrame extends JFrame {
     private JPanel addReservationPanel;
 
 
-    public AddReservationFormFrame() {
+    public AddReservationFormFrame(int showID) {
         setTitle("Reservation Form");
         setSize(800, 500);
         setLocationRelativeTo(null);
@@ -25,17 +25,25 @@ public class AddReservationFormFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
 
+        txtInputShowID.setText(String.valueOf(showID));
+
+
         //closes the form, executes a sql insert for a new reservation and goes to the previous frame afterwards
         btnSaveReservation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Show s = Show.getShow(Integer.parseInt(txtInputShowID.getText()));
                 Customer c = Customer.getCustomerByEmail(txtInputEmail.getText());
+                if (c == null) {
+                    Customer.addCustomer(txtInputEmail.getText());
+                }
+                Customer newCustomer = Customer.getCustomerByEmail(txtInputEmail.getText());
                 int numberOfSeats = Integer.parseInt(txtInputNumberOfSeats.getText());
-                Reservation.addReservation(numberOfSeats, c, s);
+                Reservation.addReservation(numberOfSeats, newCustomer, s);
+
 
                 dispose();
-                ReservationAdministrationFrame reservationAdm = new ReservationAdministrationFrame();
+                MainFrame mainFrame = new MainFrame();
             }
         });
 
@@ -44,7 +52,7 @@ public class AddReservationFormFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                ReservationAdministrationFrame reservationAdm = new ReservationAdministrationFrame();
+                MainFrame mainFrame = new MainFrame();
             }
         });
     }
@@ -96,4 +104,5 @@ public class AddReservationFormFrame extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return addReservationPanel;
     }
+
 }
