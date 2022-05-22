@@ -39,7 +39,8 @@ public class AddReservationFormFrame extends JFrame {
                 }
                 Customer newCustomer = Customer.getCustomerByEmail(txtInputEmail.getText());
                 int numberOfSeats = Integer.parseInt(txtInputNumberOfSeats.getText());
-                Reservation.addReservation(numberOfSeats, newCustomer, s);
+                int reservationNumber = Reservation.addReservation(numberOfSeats, newCustomer, s);
+                InfoBox.infoBox("The reservation number for the customer is the following: " + reservationNumber, "Reservation Number");
 
                 dispose();
                 MainFrame mainFrame = new MainFrame();
