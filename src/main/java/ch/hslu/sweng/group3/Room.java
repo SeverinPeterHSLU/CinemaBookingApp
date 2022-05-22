@@ -4,7 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Room {
 
@@ -42,6 +42,56 @@ public class Room {
         return false;
     }
 
+    public boolean isOccupied(Date startDate, Date endDate) {
+        assert (startDate != null && endDate != null && endDate.compareTo(startDate) > 0);
+        String sql = "SELECT MAX(Duration) FROM Movie WHERE IsActive = True";
+        int maxDuration = 0;
+        try {
+            Statement stmnt = App.db.createStatement();
+
+            ResultSet res = stmnt.executeQuery(sql);
+            if (res.next()) {
+                maxDuration = res.getInt("MAX(Duration)");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(maxDuration);
+        Set<Integer> showIDs = new HashSet<>();
+
+        sql = "SELECT ShowID FROM Show WHERE Show.Start <= ? AND Show.Start + ? > ? OR Show.Start > ? AND Show.Start < ? AND RoomID = ?;";
+        try (PreparedStatement pstmnt = App.db.prepareStatement(sql)) {
+            pstmnt.setDate(1, new java.sql.Date(startDate.getTime()));
+            pstmnt.setInt(2, maxDuration * 60000);
+            pstmnt.setDate(3, new java.sql.Date(startDate.getTime()));
+            pstmnt.setDate(4, new java.sql.Date(startDate.getTime()));
+            pstmnt.setDate(5, new java.sql.Date(endDate.getTime()));
+            pstmnt.setInt(6, this.getRoomID());
+
+            ResultSet res = pstmnt.executeQuery();
+            while (res.next()) {
+                showIDs.add(res.getInt(1));
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        ArrayList<Show> shows = new ArrayList<>();
+        for (int id : showIDs) {
+            shows.add(Show.getShow(id));
+        }
+        for (Show show : shows) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(show.getStart());
+            c.add(Calendar.MINUTE, show.getMovie().getMovieDuration());
+            Date end = c.getTime();
+
+            if (startDate.after(show.getStart()) && startDate.before(end) || endDate.after(show.getStart()) && endDate.before(end)) {
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      *
      * @param roomID the id of the room to be loaded form the db
