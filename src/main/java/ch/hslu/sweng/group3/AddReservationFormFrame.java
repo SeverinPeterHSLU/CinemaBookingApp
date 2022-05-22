@@ -33,20 +33,22 @@ public class AddReservationFormFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Show s = Show.getShow(Integer.parseInt(txtInputShowID.getText()));
-                Customer c = Customer.getCustomerByEmail(txtInputEmail.getText());
-                if (c == null) {
-                    Customer.addCustomer(txtInputEmail.getText());
+                if (ExceptionCheck.isValueAnEmail(txtInputEmail.getText()) == true) {
+                    Customer c = Customer.getCustomerByEmail(txtInputEmail.getText());
+                    if (c == null) {
+                        Customer.addCustomer(txtInputEmail.getText());
+                    }
+                    Customer newCustomer = Customer.getCustomerByEmail(txtInputEmail.getText());
+                    if (ExceptionCheck.isValuePositiveNumber(txtInputNumberOfSeats.getText()) == true) {
+                        int numberOfSeats = Integer.parseInt(txtInputNumberOfSeats.getText());
+                        if (s.seatsAvailable() < numberOfSeats) {
+                            InfoBox.infoBox("The number of currently available seats is: " + s.seatsAvailable() + "\n therefore this reservation cannot be created.", "Reservation Number");
+                        } else {
+                            int reservationNumber = Reservation.addReservation(numberOfSeats, newCustomer, s);
+                            InfoBox.infoBox("The reservation number for the customer is the following: " + reservationNumber, "Reservation Number");
+                        }
+                    }
                 }
-                Customer newCustomer = Customer.getCustomerByEmail(txtInputEmail.getText());
-                int numberOfSeats = Integer.parseInt(txtInputNumberOfSeats.getText());
-                if (s.seatsAvailable() < numberOfSeats) {
-                    InfoBox.infoBox("The number of currently available seats is: " + s.seatsAvailable() + "\n therefore this reservation cannot be created.", "Reservation Number");
-                } else {
-                    System.out.println(s.seatsAvailable());
-                    int reservationNumber = Reservation.addReservation(numberOfSeats, newCustomer, s);
-                    InfoBox.infoBox("The reservation number for the customer is the following: " + reservationNumber, "Reservation Number");
-                }
-
 
                 dispose();
                 MainFrame mainFrame = new MainFrame();

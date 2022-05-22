@@ -11,6 +11,18 @@ import java.util.regex.Pattern;
 
 public class ExceptionCheck {
 
+    public static boolean isValuePositiveNumber(String stringToBeChecked){
+        boolean returnVal = true;
+        String regex = "^[1-9]+[0-9]*$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(stringToBeChecked);
+        if(matcher.matches()==false){
+            InfoBox.infoBox("Please enter a valid number value.", "Number is not valid");
+            returnVal = false;
+        }
+        return returnVal;
+    }
+
     public static boolean isValidDateFormat(String dateToCheck, String timeToCheck) {
         boolean returnVal;
         String regexDate = "^(?:[0-9][0-9])?[0-9][0-9].[0-1][0-9].[0-3][0-9]$";
@@ -46,4 +58,17 @@ public class ExceptionCheck {
         }
         return returnVal;
     }
+
+    public static boolean isValueAnEmail(String email){
+        boolean returnVal = true;
+        String regex = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(email);
+        if(matcher.matches()==false){
+            InfoBox.infoBox("Please enter a valid email address.", "Email invalid");
+            returnVal = false;
+        }
+        return returnVal;
+    }
+
 }

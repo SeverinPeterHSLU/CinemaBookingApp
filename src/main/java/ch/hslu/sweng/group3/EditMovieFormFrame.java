@@ -33,9 +33,10 @@ public class EditMovieFormFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 m.setMovieTitle(txtInputMovieTitle.getText());
-                m.setMovieDuration(Integer.parseInt(txtInputDuration.getText()));
-                Movie.editMovie(m);
-
+                if (ExceptionCheck.isValuePositiveNumber(txtInputDuration.getText()) == true) {
+                    m.setMovieDuration(Integer.parseInt(txtInputDuration.getText()));
+                    Movie.editMovie(m);
+                }
                 dispose();
                 MovieAdministrationFrame movieAdm = new MovieAdministrationFrame();
 

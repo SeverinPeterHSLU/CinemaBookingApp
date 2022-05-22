@@ -29,8 +29,10 @@ public class AddMovieFormFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String movieTitle = txtInputMovieTitle.getText();
-                int duration = Integer.parseInt(txtInputDuration.getText());
-                Movie.addMovie(movieTitle, duration, true);
+                String duration = txtInputDuration.getText();
+                if (ExceptionCheck.isValuePositiveNumber(duration) == true) {
+                    Movie.addMovie(movieTitle, Integer.parseInt(duration), true);
+                }
 
                 dispose();
                 MovieAdministrationFrame movieAdm = new MovieAdministrationFrame();

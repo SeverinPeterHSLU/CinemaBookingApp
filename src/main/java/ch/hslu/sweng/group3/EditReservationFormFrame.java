@@ -33,19 +33,24 @@ public class EditReservationFormFrame extends JFrame {
         checkBoxCollectedRes.setSelected(res.isCollected());
 
 
-
-
         //executes a sql update for a reservation, closes the form and goes to the previous frame afterwards
         btnSaveReservation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Customer newCustomer = res.getCustomer();
-                newCustomer.setEmail(txtInputEmail.getText());
-                res.setCustomer(newCustomer);
-                res.setNumberOfSeats(Integer.parseInt(txtInputNumberOfSeats.getText()));
-                res.setCollected(checkBoxCollectedRes.isSelected());
-
-                Reservation.editReservation(res);
+                if (ExceptionCheck.isValueAnEmail(txtInputEmail.getText()) == true) {
+                    newCustomer.setEmail(txtInputEmail.getText());
+                    res.setCustomer(newCustomer);
+                    if (ExceptionCheck.isValuePositiveNumber(txtInputNumberOfSeats.getText()) == true) {
+                        res.setNumberOfSeats(Integer.parseInt(txtInputNumberOfSeats.getText()));
+                        if (res.getShow().seatsAvailable() < res.getNumberOfSeats()) {
+                            InfoBox.infoBox("The number of currently available seats is: " + res.getShow().seatsAvailable() + "\n therefore this reservation cannot be created.", "Reservation Number");
+                        } else {
+                            res.setCollected(checkBoxCollectedRes.isSelected());
+                            Reservation.editReservation(res);
+                        }
+                    }
+                }
                 dispose();
                 ReservationAdministrationFrame reservationAdministrationFrame = new ReservationAdministrationFrame();
             }
@@ -55,10 +60,8 @@ public class EditReservationFormFrame extends JFrame {
         btnExitForm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 dispose();
                 ReservationAdministrationFrame reservationAdministrationFrame = new ReservationAdministrationFrame();
-
             }
         });
     }
@@ -116,4 +119,5 @@ public class EditReservationFormFrame extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return editReservationPanel;
     }
+
 }

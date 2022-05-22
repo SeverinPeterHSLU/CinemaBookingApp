@@ -31,9 +31,10 @@ public class EditRoomFormFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Room changedRoom = Room.getRoom(Integer.parseInt(txtRoomID.getText()));
-                changedRoom.setSeatsOfRoom(Integer.parseInt(txtInputNumberOfSeats.getText()));
-                Room.editRoom(changedRoom);
-
+                if (ExceptionCheck.isValuePositiveNumber(txtInputNumberOfSeats.getText()) == true) {
+                    changedRoom.setSeatsOfRoom(Integer.parseInt(txtInputNumberOfSeats.getText()));
+                    Room.editRoom(changedRoom);
+                }
                 dispose();
                 RoomAdministrationFrame roomAdministrationFrame = new RoomAdministrationFrame();
             }
@@ -91,6 +92,7 @@ public class EditRoomFormFrame extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return editRoomPanel;
     }
+
 }
 
 
