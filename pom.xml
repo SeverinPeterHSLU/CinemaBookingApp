@@ -54,6 +54,11 @@
           <version>16.0.3</version>
           <scope>compile</scope>
       </dependency>
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+      <version>1.5.0-b01</version>
+    </dependency>
     <!-- https://mvnrepository.com/artifact/com.intellij/forms_rt -->
     <dependency>
       <groupId>com.intellij</groupId>
@@ -61,7 +66,6 @@
       <version>7.0.3</version>
     </dependency>
   </dependencies>
-
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>

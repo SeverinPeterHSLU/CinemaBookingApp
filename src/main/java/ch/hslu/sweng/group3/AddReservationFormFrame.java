@@ -49,6 +49,7 @@ public class AddReservationFormFrame extends JFrame {
                         } else {
                             int reservationNumber = App.reservationDAO.addReservation(numberOfSeats, newCustomer, s);
                             InfoBox.infoBox("The reservation number for the customer is the following: " + reservationNumber, "Reservation Number");
+                            SendReservationMail mail = new SendReservationMail(txtInputEmail.getText(), reservationNumber, numberOfSeats);
                         }
                     }
                 }

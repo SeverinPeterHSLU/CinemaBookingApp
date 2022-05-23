@@ -1,6 +1,9 @@
 package ch.hslu.sweng.group3;
 
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
 import java.sql.*;
+import java.util.Properties;
 
 public class App {
 
