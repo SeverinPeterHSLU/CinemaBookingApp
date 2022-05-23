@@ -1,5 +1,8 @@
 package ch.hslu.sweng.group3;
 
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -32,19 +35,19 @@ public class AddReservationFormFrame extends JFrame {
         btnSaveReservation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Show s = Show.getShow(Integer.parseInt(txtInputShowID.getText()));
+                Show s = App.showDAO.getShow(Integer.parseInt(txtInputShowID.getText()));
                 if (ExceptionCheck.isValueAnEmail(txtInputEmail.getText()) == true) {
-                    Customer c = Customer.getCustomerByEmail(txtInputEmail.getText());
+                    Customer c = App.customerDAO.getCustomerByEmail(txtInputEmail.getText());
                     if (c == null) {
-                        Customer.addCustomer(txtInputEmail.getText());
+                        App.customerDAO.addCustomer(txtInputEmail.getText());
                     }
-                    Customer newCustomer = Customer.getCustomerByEmail(txtInputEmail.getText());
+                    Customer newCustomer = App.customerDAO.getCustomerByEmail(txtInputEmail.getText());
                     if (ExceptionCheck.isValuePositiveNumber(txtInputNumberOfSeats.getText()) == true) {
                         int numberOfSeats = Integer.parseInt(txtInputNumberOfSeats.getText());
-                        if (s.seatsAvailable() < numberOfSeats) {
-                            InfoBox.infoBox("The number of currently available seats is: " + s.seatsAvailable() + "\n therefore this reservation cannot be created.", "Reservation Number");
+                        if (App.showDAO.seatsAvailable(s) < numberOfSeats) {
+                            InfoBox.infoBox("The number of currently available seats is: " + App.showDAO.seatsAvailable(s) + "\n therefore this reservation cannot be created.", "Reservation Number");
                         } else {
-                            int reservationNumber = Reservation.addReservation(numberOfSeats, newCustomer, s);
+                            int reservationNumber = App.reservationDAO.addReservation(numberOfSeats, newCustomer, s);
                             InfoBox.infoBox("The reservation number for the customer is the following: " + reservationNumber, "Reservation Number");
                         }
                     }
@@ -81,29 +84,29 @@ public class AddReservationFormFrame extends JFrame {
      */
     private void $$$setupUI$$$() {
         addReservationPanel = new JPanel();
-        addReservationPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(7, 2, new Insets(0, 0, 0, 0), -1, -1));
+        addReservationPanel.setLayout(new GridLayoutManager(7, 2, new Insets(0, 0, 0, 0), -1, -1));
         lblShow = new JLabel();
         lblShow.setText("Show");
-        addReservationPanel.add(lblShow, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        addReservationPanel.add(lblShow, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         txtInputShowID = new JTextField();
         txtInputShowID.setEditable(false);
-        addReservationPanel.add(txtInputShowID, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        addReservationPanel.add(txtInputShowID, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         lblEmail = new JLabel();
         lblEmail.setText("Email");
-        addReservationPanel.add(lblEmail, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        addReservationPanel.add(lblEmail, new GridConstraints(2, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         txtInputEmail = new JTextField();
-        addReservationPanel.add(txtInputEmail, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        addReservationPanel.add(txtInputEmail, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         lblNumberOfSeats = new JLabel();
         lblNumberOfSeats.setText("Number of Seats");
-        addReservationPanel.add(lblNumberOfSeats, new com.intellij.uiDesigner.core.GridConstraints(4, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        addReservationPanel.add(lblNumberOfSeats, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         txtInputNumberOfSeats = new JTextField();
-        addReservationPanel.add(txtInputNumberOfSeats, new com.intellij.uiDesigner.core.GridConstraints(5, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        addReservationPanel.add(txtInputNumberOfSeats, new GridConstraints(5, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         btnSaveReservation = new JButton();
         btnSaveReservation.setText("Save");
-        addReservationPanel.add(btnSaveReservation, new com.intellij.uiDesigner.core.GridConstraints(6, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 1, false));
+        addReservationPanel.add(btnSaveReservation, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 1, false));
         btnExitForm = new JButton();
         btnExitForm.setText("Cancel");
-        addReservationPanel.add(btnExitForm, new com.intellij.uiDesigner.core.GridConstraints(6, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 1, false));
+        addReservationPanel.add(btnExitForm, new GridConstraints(6, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 1, false));
     }
 
     /**

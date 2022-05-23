@@ -1,5 +1,8 @@
 package ch.hslu.sweng.group3;
 
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -30,35 +33,35 @@ public class EditShowFormFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
 
-        ArrayList<Movie> allMovies = Movie.getMovies();
+        ArrayList<Movie> allMovies = App.movieDAO.getMovies();
         for (int i = 0; i < allMovies.size(); i++) {
             comboBoxMovie.addItem(allMovies.get(i).getMovieTitle() + "  [" + allMovies.get(i).getMovieID() + "]");
         }
 
-        ArrayList<Room> allRooms = Room.getRooms();
+        ArrayList<Room> allRooms = App.roomDAO.getRooms();
         for (int i = 0; i < allRooms.size(); i++) {
             comboBoxRoom.addItem(allRooms.get(i).getRoomID());
         }
         SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd");
         SimpleDateFormat tf = new SimpleDateFormat("HH.mm");
 
-        Movie m = Show.getShow(showID).getMovie();
-        comboBoxMovie.setSelectedItem(m.getMovieTitle() + "  [" + m.getMovieID() + "]");
-        txtInputDate.setText(df.format(Show.getShow(showID).getStart()));
-        txtInputStartTime.setText(tf.format(Show.getShow(showID).getStart()));
-        comboBoxRoom.setSelectedItem(Show.getShow(showID).getRoom().getRoomID());
+        Show show = App.showDAO.getShow(showID);
+        comboBoxMovie.setSelectedItem(show.getMovie().getMovieTitle() + "  [" + show.getMovie().getMovieID() + "]");
+        txtInputDate.setText(df.format(show.getStart()));
+        txtInputStartTime.setText(tf.format(show.getStart()));
+        comboBoxRoom.setSelectedItem(show.getRoom().getRoomID());
 
 
         //executes a sql update for a show, closes the form and goes to the previous frame afterwards
         btnSaveShow.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Show editedShow = Show.getShow(showID);
+                Show editedShow = App.showDAO.getShow(showID);
                 SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd HH.mm");
                 String movieTitle = (String) comboBoxMovie.getSelectedItem();
                 String movieID_asString = movieTitle.substring(movieTitle.indexOf("[") + 1, movieTitle.indexOf("]"));
-                editedShow.setMovie(Movie.getMovie(Integer.parseInt(movieID_asString)));
-                editedShow.setRoom(Room.getRoom((int) comboBoxRoom.getSelectedItem()));
+                editedShow.setMovie(App.movieDAO.getMovie(Integer.parseInt(movieID_asString)));
+                editedShow.setRoom(App.roomDAO.getRoom((int) comboBoxRoom.getSelectedItem()));
 
                 String dateToInsert = txtInputDate.getText() + " " + txtInputStartTime.getText();
                 if (ExceptionCheck.isValidDateFormat(txtInputDate.getText(), txtInputStartTime.getText()) == true) {
@@ -67,17 +70,18 @@ public class EditShowFormFrame extends JFrame {
                     int day = Integer.parseInt(txtInputDate.getText().substring(8, 10));
                     int hour = Integer.parseInt(txtInputStartTime.getText().substring(0, 2));
                     int minute = Integer.parseInt(txtInputStartTime.getText().substring(3, 5));
-                    Date d = new Date(year, month, day, hour, minute);
-                    if (ExceptionCheck.isDateInFuture(d, df) == true) {
+                    Date d1 = new Date(year, month, day, hour, minute);
+                    if (ExceptionCheck.isDateInFuture(d1, df) == true) {
                         Calendar c = Calendar.getInstance();
-                        c.setTime(d);
+                        c.setTime(d1);
                         c.add(Calendar.MINUTE, editedShow.getMovie().getMovieDuration());
                         Date d2 = c.getTime();
-                        df.format(d);
+                        df.format(d1);
                         df.format(d2);
-                        if (!editedShow.getRoom().isOccupied(d, d2)) {
-                            editedShow.setStart(d);
-                            if (Show.editShow(editedShow) == false) {
+                        Show showInRoom = App.roomDAO.isOccupiedBy(d1, d2, editedShow.getRoom());
+                        if (showInRoom == null || editedShow.getShowID() == showInRoom.getShowID()) {
+                            editedShow.setStart(d1);
+                            if (App.showDAO.editShow(editedShow) == false) {
                                 InfoBox.infoBox("The Show can't be edited as there are already reservations made.", "Show can't be changed");
                             }
                         } else {
@@ -120,33 +124,33 @@ public class EditShowFormFrame extends JFrame {
      */
     private void $$$setupUI$$$() {
         editShowPanel = new JPanel();
-        editShowPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(9, 2, new Insets(0, 0, 0, 0), -1, -1));
+        editShowPanel.setLayout(new GridLayoutManager(9, 2, new Insets(0, 0, 0, 0), -1, -1));
         lblMovieTitle = new JLabel();
         lblMovieTitle.setText("Movie Title");
-        editShowPanel.add(lblMovieTitle, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        editShowPanel.add(lblMovieTitle, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         comboBoxMovie = new JComboBox();
-        editShowPanel.add(comboBoxMovie, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        editShowPanel.add(comboBoxMovie, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         lblDate = new JLabel();
         lblDate.setText("Date");
-        editShowPanel.add(lblDate, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        editShowPanel.add(lblDate, new GridConstraints(2, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         txtInputDate = new JTextField();
-        editShowPanel.add(txtInputDate, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        editShowPanel.add(txtInputDate, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         lblStartTime = new JLabel();
         lblStartTime.setText("Start Time");
-        editShowPanel.add(lblStartTime, new com.intellij.uiDesigner.core.GridConstraints(4, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        editShowPanel.add(lblStartTime, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         txtInputStartTime = new JTextField();
-        editShowPanel.add(txtInputStartTime, new com.intellij.uiDesigner.core.GridConstraints(5, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        editShowPanel.add(txtInputStartTime, new GridConstraints(5, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         lblRoom = new JLabel();
         lblRoom.setText("Room");
-        editShowPanel.add(lblRoom, new com.intellij.uiDesigner.core.GridConstraints(6, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        editShowPanel.add(lblRoom, new GridConstraints(6, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         comboBoxRoom = new JComboBox();
-        editShowPanel.add(comboBoxRoom, new com.intellij.uiDesigner.core.GridConstraints(7, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        editShowPanel.add(comboBoxRoom, new GridConstraints(7, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         btnSaveShow = new JButton();
         btnSaveShow.setText("Save");
-        editShowPanel.add(btnSaveShow, new com.intellij.uiDesigner.core.GridConstraints(8, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 0, false));
+        editShowPanel.add(btnSaveShow, new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 0, false));
         btnExitForm = new JButton();
         btnExitForm.setText("Cancel");
-        editShowPanel.add(btnExitForm, new com.intellij.uiDesigner.core.GridConstraints(8, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 0, false));
+        editShowPanel.add(btnExitForm, new GridConstraints(8, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 0, false));
     }
 
     /**
