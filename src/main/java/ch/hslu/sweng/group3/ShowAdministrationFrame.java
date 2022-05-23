@@ -1,5 +1,8 @@
 package ch.hslu.sweng.group3;
 
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -36,7 +39,7 @@ public class ShowAdministrationFrame extends JFrame {
         model.setColumnIdentifiers(headers);
 
 
-        ArrayList<Show> allShows = Show.getShows();
+        ArrayList<Show> allShows = App.showDAO.getShows();
 
 
         for (int s = 0; s < allShows.size(); s++) {
@@ -70,8 +73,8 @@ public class ShowAdministrationFrame extends JFrame {
                 Object obj = currentShowsTable.getValueAt(currentShowsTable.getSelectedRow(), 0);
                 String showID_string = obj.toString();
                 int showID = Integer.parseInt(showID_string);
-                Show s = Show.getShow(showID);
-                if (Show.removeShow(s) == false) {
+                Show s = App.showDAO.getShow(showID);
+                if (App.showDAO.removeShow(s) == false) {
                     InfoBox.infoBox("There are reservations booked already for this show. Therefore it cannot be removed.", "Information");
                 }
                 dispose();
@@ -117,21 +120,21 @@ public class ShowAdministrationFrame extends JFrame {
      */
     private void $$$setupUI$$$() {
         showAdministrationPanel = new JPanel();
-        showAdministrationPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
+        showAdministrationPanel.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
         lblCurrentShows = new JLabel();
         lblCurrentShows.setText("Upcoming Shows");
-        showAdministrationPanel.add(lblCurrentShows, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        showAdministrationPanel.add(lblCurrentShows, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         btnAddShow = new JButton();
         btnAddShow.setText("Add Show");
-        showAdministrationPanel.add(btnAddShow, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 0, false));
+        showAdministrationPanel.add(btnAddShow, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 0, false));
         btnBackToMain = new JButton();
         btnBackToMain.setText("Go Back");
-        showAdministrationPanel.add(btnBackToMain, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 0, false));
+        showAdministrationPanel.add(btnBackToMain, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 0, false));
         showTablePanel = new JPanel();
-        showTablePanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        showAdministrationPanel.add(showTablePanel, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        showTablePanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        showAdministrationPanel.add(showTablePanel, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         currentShowsTable = new JTable();
-        showTablePanel.add(currentShowsTable, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
+        showTablePanel.add(currentShowsTable, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
     }
 
     /**
