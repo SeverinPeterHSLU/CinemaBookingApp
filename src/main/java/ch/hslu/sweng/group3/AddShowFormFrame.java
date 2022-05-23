@@ -73,6 +73,8 @@ public class AddShowFormFrame extends JFrame {
                         } else {
                             InfoBox.infoBox("This Room is occupied at the requested time, plesae select other room or change time", "Room Occupied");
                         }
+                    } else {
+                        InfoBox.infoBox("The entered Date or Time is not in the future. You can't plan a Show in the past", "Date must be in future.");
                     }
                 }
                 dispose();

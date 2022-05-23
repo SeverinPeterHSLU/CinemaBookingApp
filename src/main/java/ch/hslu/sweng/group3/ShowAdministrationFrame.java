@@ -50,8 +50,12 @@ public class ShowAdministrationFrame extends JFrame {
             String roomID = String.valueOf(r.getRoomID());
 
             Object[] row = {showID, startOfShow, movieID, movieTitle, roomID, "Edit", "Delete"};
-            model.addRow(row);
+            if (ExceptionCheck.isDateInFuture(d, df) == true) {
+                model.addRow(row);
+            }
+
         }
+
         Action edit = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
                 Object obj = currentShowsTable.getValueAt(currentShowsTable.getSelectedRow(), 0);
@@ -66,11 +70,9 @@ public class ShowAdministrationFrame extends JFrame {
                 Object obj = currentShowsTable.getValueAt(currentShowsTable.getSelectedRow(), 0);
                 String showID_string = obj.toString();
                 int showID = Integer.parseInt(showID_string);
-                if (Show.hasReservation(showID)) {
+                Show s = Show.getShow(showID);
+                if (Show.removeShow(s) == false) {
                     InfoBox.infoBox("There are reservations booked already for this show. Therefore it cannot be removed.", "Information");
-                } else {
-                    Show s = Show.getShow(showID);
-                    Show.removeShow(s);
                 }
                 dispose();
                 ShowAdministrationFrame newShowAdministrationFrame = new ShowAdministrationFrame();

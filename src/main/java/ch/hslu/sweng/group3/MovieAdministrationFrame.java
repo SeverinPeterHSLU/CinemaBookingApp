@@ -47,7 +47,6 @@ public class MovieAdministrationFrame extends JFrame {
 
             Object[] row = {movieID, movieTitle, duration, "Edit", "Delete"};
             model.addRow(row);
-            //model.setValueAt(new JButton("Edit"), r, 3);
         }
         Action edit = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
@@ -63,11 +62,9 @@ public class MovieAdministrationFrame extends JFrame {
                 Object obj = activeMoviesTable.getValueAt(activeMoviesTable.getSelectedRow(), 0);
                 String movieID_string = obj.toString();
                 int movieID = Integer.parseInt(movieID_string);
-                if (Movie.hasShow(movieID)) {
-                    InfoBox.infoBox("There are shows planned for this movie. Therefore it cannot be removed.", "Information");
-                } else {
-                    Movie m = Movie.getMovie(movieID);
-                    Movie.removeMovie(m);
+                Movie m = Movie.getMovie(movieID);
+                if (Movie.removeMovie(m) == false) {
+                    InfoBox.infoBox("There are shows booked already for this movie. Therefore it cannot be removed.", "Movie cannot be removed");
                 }
                 dispose();
                 MovieAdministrationFrame newMovieAdministrationFrame = new MovieAdministrationFrame();

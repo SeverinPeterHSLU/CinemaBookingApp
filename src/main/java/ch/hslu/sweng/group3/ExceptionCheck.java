@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,9 +55,44 @@ public class ExceptionCheck {
             returnVal = true;
         }else{
             returnVal = false;
-            InfoBox.infoBox("The entered Date or Time is not in the future. You can't plan a Show in the past", "Date must be in future.");
         }
         return returnVal;
+    }
+
+    public static boolean isDateInCurrentWeek(Date enteredDate) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH.mm");
+        //Date enteredDate = new Date(enteredDateString);
+        Date today = new Date();
+        String todayString = dateFormat.format(today);
+        boolean returnVal;
+
+
+        //create instance of the Calendar class and set the date to the given date
+        Calendar cal = Calendar.getInstance();
+        try{
+            cal.setTime(dateFormat.parse(todayString));
+        }catch(ParseException e){
+            e.printStackTrace();
+        }
+        // use add() method to add the days to the given date
+        cal.add(Calendar.DAY_OF_MONTH, 7);
+        String dateInAWeek = dateFormat.format(cal.getTime());
+        Date inAWeek = null;
+        try {
+            inAWeek = dateFormat.parse(dateInAWeek);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //compare both dates
+        if((enteredDate.after(today) || enteredDate.equals(today)) && enteredDate.before(inAWeek)){
+            System.out.println(inAWeek);
+            returnVal = true;
+        }else{
+            returnVal = false;
+        }
+        return returnVal;
+
     }
 
     public static boolean isValueAnEmail(String email){

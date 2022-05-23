@@ -35,7 +35,9 @@ public class EditMovieFormFrame extends JFrame {
                 m.setMovieTitle(txtInputMovieTitle.getText());
                 if (ExceptionCheck.isValuePositiveNumber(txtInputDuration.getText()) == true) {
                     m.setMovieDuration(Integer.parseInt(txtInputDuration.getText()));
-                    Movie.editMovie(m);
+                    if (Movie.editMovie(m) == false) {
+                        InfoBox.infoBox("There are shows planned already for this movie. Therefore it cannot be changed.", "Movie can't be changed");
+                    }
                 }
                 dispose();
                 MovieAdministrationFrame movieAdm = new MovieAdministrationFrame();
@@ -94,4 +96,5 @@ public class EditMovieFormFrame extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return editMoviePanel;
     }
+
 }

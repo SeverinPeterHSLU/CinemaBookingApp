@@ -77,10 +77,14 @@ public class EditShowFormFrame extends JFrame {
                         df.format(d2);
                         if (!editedShow.getRoom().isOccupied(d, d2)) {
                             editedShow.setStart(d);
-                            Show.editShow(editedShow);
+                            if (Show.editShow(editedShow) == false) {
+                                InfoBox.infoBox("The Show can't be edited as there are already reservations made.", "Show can't be changed");
+                            }
                         } else {
                             InfoBox.infoBox("This Room is occupied at the requested time, plesae select other room or change time", "Room Occupied");
                         }
+                    } else {
+                        InfoBox.infoBox("The entered Date or Time is not in the future. You can't plan a Show in the past", "Date must be in future.");
                     }
                 }
                 dispose();

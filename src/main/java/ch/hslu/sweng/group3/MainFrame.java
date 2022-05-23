@@ -1,7 +1,10 @@
 package ch.hslu.sweng.group3;
 
+import javax.naming.ldap.SortKey;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,6 +48,12 @@ public class MainFrame extends JFrame {
         model.setColumnIdentifiers(headers);
 
        ArrayList<Show> showsOfTheWeek = Show.getShows();
+       TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(weekProgramTable.getModel());
+       weekProgramTable.setRowSorter(sorter);
+
+        ArrayList<RowSorter.SortKey> sortKeys = new ArrayList<>(25);
+        sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
+        sorter.setSortKeys(sortKeys);
 
         for (int s = 0; s < showsOfTheWeek.size(); s++) {
             SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd HH.mm");
@@ -57,7 +66,9 @@ public class MainFrame extends JFrame {
             String roomID = String.valueOf(r.getRoomID());
 
             Object[] row = {showID, startOfShow, movieID, movieTitle, roomID, "Add Reservation"};
-            model.addRow(row);
+            if (ExceptionCheck.isDateInCurrentWeek(d) == true) {
+                model.addRow(row);
+            }
         }
         Action addRes = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
