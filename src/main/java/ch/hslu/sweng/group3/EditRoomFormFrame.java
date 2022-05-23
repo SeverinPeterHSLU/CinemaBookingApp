@@ -1,5 +1,8 @@
 package ch.hslu.sweng.group3;
 
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -22,7 +25,7 @@ public class EditRoomFormFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
 
-        Room r = Room.getRoom(roomID);
+        Room r = App.roomDAO.getRoom(roomID);
         txtRoomID.setText(String.valueOf(r.getRoomID()));
         txtInputNumberOfSeats.setText(String.valueOf(r.getSeatsOfRoom()));
 
@@ -30,10 +33,10 @@ public class EditRoomFormFrame extends JFrame {
         btnSaveRoom.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Room changedRoom = Room.getRoom(Integer.parseInt(txtRoomID.getText()));
+                Room changedRoom = App.roomDAO.getRoom(Integer.parseInt(txtRoomID.getText()));
                 if (ExceptionCheck.isValuePositiveNumber(txtInputNumberOfSeats.getText()) == true) {
                     changedRoom.setSeatsOfRoom(Integer.parseInt(txtInputNumberOfSeats.getText()));
-                    Room.editRoom(changedRoom);
+                    App.roomDAO.editRoom(changedRoom);
                 }
                 dispose();
                 RoomAdministrationFrame roomAdministrationFrame = new RoomAdministrationFrame();
@@ -66,24 +69,24 @@ public class EditRoomFormFrame extends JFrame {
      */
     private void $$$setupUI$$$() {
         editRoomPanel = new JPanel();
-        editRoomPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(5, 2, new Insets(0, 0, 0, 0), -1, -1));
+        editRoomPanel.setLayout(new GridLayoutManager(5, 2, new Insets(0, 0, 0, 0), -1, -1));
         lblRoomID = new JLabel();
         lblRoomID.setText("Room Number");
-        editRoomPanel.add(lblRoomID, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        editRoomPanel.add(lblRoomID, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         txtRoomID = new JTextField();
         txtRoomID.setEditable(false);
-        editRoomPanel.add(txtRoomID, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        editRoomPanel.add(txtRoomID, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         lblNumberOfSeats = new JLabel();
         lblNumberOfSeats.setText("Number of Seats");
-        editRoomPanel.add(lblNumberOfSeats, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        editRoomPanel.add(lblNumberOfSeats, new GridConstraints(2, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         txtInputNumberOfSeats = new JTextField();
-        editRoomPanel.add(txtInputNumberOfSeats, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        editRoomPanel.add(txtInputNumberOfSeats, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         btnSaveRoom = new JButton();
         btnSaveRoom.setText("Save");
-        editRoomPanel.add(btnSaveRoom, new com.intellij.uiDesigner.core.GridConstraints(4, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 0, false));
+        editRoomPanel.add(btnSaveRoom, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 0, false));
         btnExitForm = new JButton();
         btnExitForm.setText("Cancel");
-        editRoomPanel.add(btnExitForm, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 0, false));
+        editRoomPanel.add(btnExitForm, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 0, false));
     }
 
     /**

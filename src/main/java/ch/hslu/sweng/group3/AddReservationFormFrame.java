@@ -35,19 +35,19 @@ public class AddReservationFormFrame extends JFrame {
         btnSaveReservation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Show s = Show.getShow(Integer.parseInt(txtInputShowID.getText()));
+                Show s = App.showDAO.getShow(Integer.parseInt(txtInputShowID.getText()));
                 if (ExceptionCheck.isValueAnEmail(txtInputEmail.getText()) == true) {
-                    Customer c = Customer.getCustomerByEmail(txtInputEmail.getText());
+                    Customer c = App.customerDAO.getCustomerByEmail(txtInputEmail.getText());
                     if (c == null) {
-                        Customer.addCustomer(txtInputEmail.getText());
+                        App.customerDAO.addCustomer(txtInputEmail.getText());
                     }
-                    Customer newCustomer = Customer.getCustomerByEmail(txtInputEmail.getText());
+                    Customer newCustomer = App.customerDAO.getCustomerByEmail(txtInputEmail.getText());
                     if (ExceptionCheck.isValuePositiveNumber(txtInputNumberOfSeats.getText()) == true) {
                         int numberOfSeats = Integer.parseInt(txtInputNumberOfSeats.getText());
-                        if (s.seatsAvailable() < numberOfSeats) {
-                            InfoBox.infoBox("The number of currently available seats is: " + s.seatsAvailable() + "\n therefore this reservation cannot be created.", "Reservation Number");
+                        if (App.showDAO.seatsAvailable(s) < numberOfSeats) {
+                            InfoBox.infoBox("The number of currently available seats is: " + App.showDAO.seatsAvailable(s) + "\n therefore this reservation cannot be created.", "Reservation Number");
                         } else {
-                            int reservationNumber = Reservation.addReservation(numberOfSeats, newCustomer, s);
+                            int reservationNumber = App.reservationDAO.addReservation(numberOfSeats, newCustomer, s);
                             InfoBox.infoBox("The reservation number for the customer is the following: " + reservationNumber, "Reservation Number");
                             SendReservationMail mail = new SendReservationMail(txtInputEmail.getText(), reservationNumber, numberOfSeats);
                         }

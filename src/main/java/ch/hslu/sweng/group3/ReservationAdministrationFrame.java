@@ -1,5 +1,8 @@
 package ch.hslu.sweng.group3;
 
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -25,7 +28,7 @@ public class ReservationAdministrationFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int reservationNumber = Integer.parseInt(txtInputReservationNumber.getText());
-                Reservation r = Reservation.getReservation(reservationNumber);
+                Reservation r = App.reservationDAO.getReservation(reservationNumber);
                 dispose();
                 EditReservationFormFrame editReservationFormFrame = new EditReservationFormFrame(r);
             }
@@ -58,18 +61,18 @@ public class ReservationAdministrationFrame extends JFrame {
      */
     private void $$$setupUI$$$() {
         reservationAdministrationPanel = new JPanel();
-        reservationAdministrationPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
+        reservationAdministrationPanel.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
         lblReservationNumber = new JLabel();
         lblReservationNumber.setText("Reservation Number");
-        reservationAdministrationPanel.add(lblReservationNumber, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        reservationAdministrationPanel.add(lblReservationNumber, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         txtInputReservationNumber = new JTextField();
-        reservationAdministrationPanel.add(txtInputReservationNumber, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        reservationAdministrationPanel.add(txtInputReservationNumber, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         btnSearchReservation = new JButton();
         btnSearchReservation.setText("Search");
-        reservationAdministrationPanel.add(btnSearchReservation, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 0, false));
+        reservationAdministrationPanel.add(btnSearchReservation, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 0, false));
         btnBackToMain = new JButton();
         btnBackToMain.setText("Go Back");
-        reservationAdministrationPanel.add(btnBackToMain, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 0, false));
+        reservationAdministrationPanel.add(btnBackToMain, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 40), null, 0, false));
     }
 
     /**

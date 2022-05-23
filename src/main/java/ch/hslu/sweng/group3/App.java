@@ -8,6 +8,11 @@ import java.util.Properties;
 public class App {
 
     protected static Connection db;
+    protected static MovieDAO movieDAO;
+    protected static CustomerDAO customerDAO;
+    protected static RoomDAO roomDAO;
+    protected static ShowDAO showDAO;
+    protected static ReservationDAO reservationDAO;
 
     private static boolean hasNoTables() {
         String sql = "SELECT name FROM sqlite_schema\n" +
@@ -42,17 +47,29 @@ public class App {
         }
     }
 
+    public static void connect() {
+        if (db == null) {
+            try {
+                db = DriverManager.getConnection("jdbc:sqlite:DataBase.db");
+                System.out.println("got connected");
+                if (hasNoTables()) {
+                    setUpDB();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
     public static void main(String[] args) {
 
-        try {
-            db = DriverManager.getConnection("jdbc:sqlite:DataBase.db");
-            System.out.println("got connected");
-            if (hasNoTables()) {
-                setUpDB();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        connect();
+        movieDAO = new MovieDAO(db);
+        customerDAO = new CustomerDAO(db);
+        roomDAO = new RoomDAO(db);
+        showDAO = new ShowDAO(db);
+        reservationDAO = new ReservationDAO(db);
 
         new MainFrame().setVisible(true);
     }
