@@ -57,7 +57,6 @@ public class Room {
             e.printStackTrace();
         }
 
-        System.out.println(maxDuration);
         Set<Integer> showIDs = new HashSet<>();
 
         sql = "SELECT ShowID FROM Show WHERE Show.Start <= ? AND Show.Start + ? > ? OR Show.Start > ? AND Show.Start < ? AND RoomID = ?;";

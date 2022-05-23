@@ -56,9 +56,7 @@ public class App {
             db = DriverManager.getConnection("jdbc:sqlite:DataBase.db");
             System.out.println("got connected");
             if (hasNoTables()) {
-                System.out.println("DB has no Tables!");
                 setUpDB();
-                System.out.println(hasNoTables());
             }
         } catch (SQLException e) {
             e.printStackTrace();
