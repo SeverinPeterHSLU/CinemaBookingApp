@@ -22,6 +22,11 @@ public class Customer {
         this.email = email;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof Customer && ((Customer) o).getCustomerID() == customerID;
+    }
+
     public int getCustomerID() { return customerID; }
 
     public String getEmail() { return email;}

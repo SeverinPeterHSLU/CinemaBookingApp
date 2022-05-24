@@ -14,7 +14,7 @@ public class MovieDAO {
      *
      * @return true if there is a show in the DB that shows the movie, false if not
      */
-    public boolean hasShow(int movieID) {
+    private boolean hasShow(int movieID) {
         String sql = "SELECT COUNT(MovieID) FROM Show WHERE MovieID = ?";
         try (PreparedStatement pstmnt = db.prepareStatement(sql)) {
             pstmnt.setInt(1, movieID);

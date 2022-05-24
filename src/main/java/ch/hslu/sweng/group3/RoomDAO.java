@@ -94,7 +94,7 @@ public class RoomDAO {
 
             ResultSet res = pstmnt.executeQuery();
             if (res.next()) {
-                retRoom = new Room(res.getInt("RoomID"), res.getInt("AmountofSeats"));
+                retRoom = new Room(res.getInt("RoomID"), res.getInt("AmountOfSeats"));
             }
         } catch(SQLException e) {
             e.printStackTrace();
@@ -113,7 +113,7 @@ public class RoomDAO {
             Statement stmnt = db.createStatement();
             ResultSet res = stmnt.executeQuery(sql);
             while (res.next()) {
-                returnList.add(new Room(res.getInt("RoomID"), res.getInt("AmountofSeats")));
+                returnList.add(new Room(res.getInt("RoomID"), res.getInt("AmountOfSeats")));
             }
         } catch (SQLException e) {
             e.printStackTrace();

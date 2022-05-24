@@ -31,6 +31,11 @@ public class Reservation {
         this.isCollected = isCollected;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof Reservation && ((Reservation) o).getReservationID() == reservationID;
+    }
+
     public int getReservationID() { return reservationID; }
 
     public Show getShow() { return show; }

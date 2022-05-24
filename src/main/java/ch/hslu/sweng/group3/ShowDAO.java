@@ -35,7 +35,7 @@ public class ShowDAO {
      *
      * @return true if there is a reservation for the show, false if not
      */
-    public boolean hasReservation(int showID) {
+    private boolean hasReservation(int showID) {
         String sql = "SELECT COUNT(ShowID) FROM Reservation WHERE ShowID = ?";
         try (PreparedStatement pstmnt = db.prepareStatement(sql)) {
             pstmnt.setInt(1, showID);
@@ -51,7 +51,6 @@ public class ShowDAO {
     }
 
     public int seatsAvailable(Show show) {
-        ArrayList<Reservation> resrevations = new ArrayList<>();
         int bookedSeats = 0;
         String sql = "SELECT NumberOfSeats FROM Reservation WHERE ShowID = ?";
         try (PreparedStatement pstmnt = db.prepareStatement(sql)) {
@@ -155,7 +154,7 @@ public class ShowDAO {
             Statement stmnt = db.createStatement();
             ResultSet res = stmnt.executeQuery(sqlSelect);
             while (res.next()) {
-                returnList.add(new Show(res.getInt("ShowID"), res.getDate("Start"),
+                returnList.add(new Show(res.getInt("ShowID"), (Date)res.getDate("Start"),
                         new Movie(res.getInt("MovieID"), res.getString("Title"),
                                 res.getInt("Duration"), res.getBoolean("IsActive")),
                         new Room(res.getInt("RoomID"), res.getInt("AmountOfSeats"))));

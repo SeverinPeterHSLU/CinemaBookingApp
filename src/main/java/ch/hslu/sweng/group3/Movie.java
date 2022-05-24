@@ -22,6 +22,11 @@ public class Movie {
         this.isActive = isActive;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof Movie && ((Movie) o).getMovieID() == movieID;
+    }
+
     public int getMovieID() { return movieID; }
 
     public int getMovieDuration() { return movieDuration; }

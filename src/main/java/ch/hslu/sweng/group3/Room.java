@@ -22,6 +22,11 @@ public class Room {
         this.seatsOfRoom = seatsOfRoom;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof Room && ((Room) o).getRoomID() == roomID;
+    }
+
     public int getRoomID() { return roomID; }
 
     public int getSeatsOfRoom() { return seatsOfRoom; }

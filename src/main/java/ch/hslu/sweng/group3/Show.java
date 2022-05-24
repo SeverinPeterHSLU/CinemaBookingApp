@@ -30,6 +30,11 @@ public class Show {
         this.start = start;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof Show && ((Show) o).getShowID() == showID;
+    }
+
     public int getShowID() { return showID; }
 
     public Movie getMovie() { return movie; }
