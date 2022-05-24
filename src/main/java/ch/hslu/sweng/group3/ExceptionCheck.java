@@ -27,7 +27,7 @@ public class ExceptionCheck {
     public static boolean isValidDateFormat(String dateToCheck, String timeToCheck) {
         boolean returnVal;
         String regexDate = "^(?:[0-9][0-9])?[0-9][0-9].[0-1][0-9].[0-3][0-9]$";
-        String regexTime = "^[0-2][0-9].[0-5][0-9]$";
+        String regexTime = "^[0-2][0-9]\\.[0-5][0-9]$";
         Pattern patternDate = Pattern.compile(regexDate);
         Pattern patternTime = Pattern.compile(regexTime);
 
